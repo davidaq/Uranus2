@@ -12,13 +12,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    consoleinput.cpp
+    console.cpp \
+    cfg.cpp
 
 HEADERS  += mainwindow.h \
-    consoleinput.h
+    console.h \
+    cfg.h
 
 FORMS    += mainwindow.ui \
-    consoleinput.ui
+    console.ui
 
 RESOURCES += \
     res.qrc
