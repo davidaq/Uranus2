@@ -4,6 +4,8 @@
 #include "cfg.h"
 
 #include <QMainWindow>
+#include <QFileSystemModel>
+#include <QTreeView>
 
 namespace Ui {
 class MainWindow;
@@ -19,16 +21,20 @@ public:
     
 private:
     Ui::MainWindow *ui;
-    void refreshBench();
-    void benchOpenDir(QTreeWidgetItem*);
-    QTreeWidgetItem *benchCwd,*menuTarget;
+    QTreeView* fileView;
+    QFileSystemModel *benchModel;
+    QModelIndex benchMenuTarget;
 
 private slots:
     void cwdChanged(QString);
     void on_setCwdBtn_clicked();
-    void on_benchView_customContextMenuRequested(const QPoint &pos);
     void on_action_BenchRename_triggered();
     void on_benchView_itemChanged(QTreeWidgetItem *item, int column);
+    void on_fileView_customContextMenuRequested(const QPoint &pos);
+    void on_benchFileFilter_textChanged(const QString &arg1);
+
+    // bench menu actions
+    void benchMenu_mkdir();
 };
 
 #endif // MAINWINDOW_H

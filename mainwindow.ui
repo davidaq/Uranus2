@@ -74,7 +74,7 @@
    <property name="minimumSize">
     <size>
      <width>130</width>
-     <height>241</height>
+     <height>246</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -109,22 +109,16 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="QLineEdit" name="benchFileFilter">
        <property name="placeholderText">
         <string>Display Filter</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QTreeWidget" name="benchView">
+      <widget class="QTreeView" name="fileView">
        <property name="contextMenuPolicy">
         <enum>Qt::CustomContextMenu</enum>
-       </property>
-       <property name="editTriggers">
-        <set>QAbstractItemView::EditKeyPressed</set>
-       </property>
-       <property name="rootIsDecorated">
-        <bool>false</bool>
        </property>
        <property name="animated">
         <bool>true</bool>
@@ -132,11 +126,6 @@
        <attribute name="headerVisible">
         <bool>false</bool>
        </attribute>
-       <column>
-        <property name="text">
-         <string>Name</string>
-        </property>
-       </column>
       </widget>
      </item>
     </layout>
@@ -157,48 +146,6 @@
    </attribute>
    <widget class="Console" name="consoleWidget"/>
   </widget>
-  <action name="action_BenchMakeFolder">
-   <property name="icon">
-    <iconset resource="res.qrc">
-     <normaloff>:/images/folder-new.png</normaloff>:/images/folder-new.png</iconset>
-   </property>
-   <property name="text">
-    <string>Make Folder</string>
-   </property>
-  </action>
-  <action name="action_BenchCreateEmptyDocument">
-   <property name="icon">
-    <iconset resource="res.qrc">
-     <normaloff>:/images/document-new.png</normaloff>:/images/document-new.png</iconset>
-   </property>
-   <property name="text">
-    <string>Create Empty Document</string>
-   </property>
-  </action>
-  <action name="action_BenchDelete">
-   <property name="text">
-    <string>Delete</string>
-   </property>
-  </action>
-  <action name="action_BenchDuplicate">
-   <property name="text">
-    <string>Duplicate</string>
-   </property>
-  </action>
-  <action name="action_BenchRename">
-   <property name="text">
-    <string>Rename</string>
-   </property>
-  </action>
-  <action name="action_BenchEdit">
-   <property name="icon">
-    <iconset resource="res.qrc">
-     <normaloff>:/images/editor.png</normaloff>:/images/editor.png</iconset>
-   </property>
-   <property name="text">
-    <string>Edit</string>
-   </property>
-  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -210,7 +157,7 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>lineEdit</tabstop>
+  <tabstop>benchFileFilter</tabstop>
  </tabstops>
  <resources>
   <include location="res.qrc"/>

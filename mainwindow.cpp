@@ -12,16 +12,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->consoleWidget,SIGNAL(cwdChanged(QString)),SLOT(cwdChanged(QString)));
 
-    QTreeWidgetItem* item=new QTreeWidgetItem(QStringList()<<"Bookmarks");
-    item->setIcon(0,QIcon(":/images/folder-bookmarks.png"));
-    ui->benchView->addTopLevelItem(item);
-    item->setExpanded(true);
-    item=new QTreeWidgetItem(QStringList()<<"Working directory");
-    item->setIcon(0,QIcon(":/images/folder-home.png"));
-    ui->benchView->addTopLevelItem(item);
-    item->setExpanded(true);
-    benchCwd=item;
+    benchModel=new QFileSystemModel;
+    benchModel->setNameFilterDisables(false);
 
+    ui->fileView->setModel(benchModel);
+    ui->fileView->hideColumn(1);
+    ui->fileView->hideColumn(2);
+    ui->fileView->hideColumn(3);
+
+    fileView=ui->fileView;
 }
 
 MainWindow::~MainWindow()
@@ -36,7 +35,8 @@ void MainWindow::cwdChanged(QString path)
         name=name.left(25)+"...";
     ui->setCwdBtn->setText(name);
     ui->setCwdBtn->setToolTip(path);
-    refreshBench();
+    benchModel->setRootPath(path);
+    ui->fileView->setRootIndex(benchModel->index(path));
 }
 
 void MainWindow::on_setCwdBtn_clicked()
@@ -48,86 +48,31 @@ void MainWindow::on_setCwdBtn_clicked()
     }
 }
 
-void MainWindow::refreshBench()
+void MainWindow::on_benchFileFilter_textChanged(const QString &filter)
 {
-    foreach(QTreeWidgetItem* item,benchCwd->takeChildren())
-    {
-        delete item;
-    }
-    benchCwd->setToolTip(0,ui->consoleWidget->getCwd());
-    benchOpenDir(benchCwd);
+    benchModel->setNameFilters((filter.isEmpty()?"*":filter).split(';'));
 }
 
-void MainWindow::benchOpenDir(QTreeWidgetItem *parent)
+void MainWindow::on_fileView_customContextMenuRequested(const QPoint &pos)
 {
-    QString base=(QString)parent->toolTip(0);
-    QDir dir(base);
-    dir.setFilter(QDir::Dirs|QDir::Files|QDir::NoDotAndDotDot|QDir::Readable|QDir::NoSymLinks);
-    dir.setSorting(QDir::Name|QDir::DirsFirst);
-    QFileInfoList list=dir.entryInfoList();
-    foreach(QFileInfo info,list){
-        QTreeWidgetItem* item=new QTreeWidgetItem(QStringList()<<info.fileName());
-        QString icon;
-        parent->addChild(item);
-        item->setFlags(item->flags()|Qt::ItemIsEditable);
-        item->setToolTip(0,info.filePath());
-        if(info.isDir())
-        {
-            icon=":/images/folder.png";
-            benchOpenDir(item);
-            item->setData(0,5,true);
-        }else
-        {
-            icon=":/images/document.png";
-            item->setData(0,5,false);
-        }
-        item->setIcon(0,QIcon(icon));
-    }
-}
-
-void MainWindow::on_benchView_customContextMenuRequested(const QPoint &pos)
-{
-    static QMenu menu;
+    static QMenu menu(this);
+    QModelIndex item=ui->fileView->currentIndex();
+    benchMenuTarget=item;
     menu.clear();
-    menuTarget=ui->benchView->itemAt(pos);
 
-    menu.addAction(ui->action_BenchCreateEmptyDocument);
-    menu.addAction(ui->action_BenchMakeFolder);
-
-    if(menuTarget!=0&&!menuTarget->data(0,5).isNull()){
-        ui->benchView->setCurrentItem(menuTarget);
-        menu.addSeparator();
-        if(!menuTarget->data(0,5).toBool())
-        {
-            menu.addAction(ui->action_BenchEdit);
-            menu.addAction(ui->action_BenchDuplicate);
-        }
-        menu.addAction(ui->action_BenchRename);
-        menu.addSeparator();
-        menu.addAction(ui->action_BenchDelete);
+    menu.addAction( QIcon(":/images/folder-new.png") , "Make Directory" , this , SLOT(benchMenu_mkdir()) );
+    if(benchModel->isDir(item))
+    {
     }
-    menu.move(ui->benchView->mapToGlobal(pos));
+    menu.move(ui->fileView->mapToGlobal(pos));
     menu.show();
 }
 
 // Bench Menu Actions
 void MainWindow::on_action_BenchRename_triggered()
 {
-    if(menuTarget==0)
-        return;
-    ui->benchView->editItem(menuTarget);
 }
 
 void MainWindow::on_benchView_itemChanged(QTreeWidgetItem *item, int)
 {
-    if(item->data(0,5).isNull())
-        return;
-    QString path=item->toolTip(0);
-    QDir dir(path);
-    QString oldName=dir.dirName(),newName=item->text(0);
-    dir.cd("..");
-    if(!dir.exists(newName))
-    {
-        dir.rename(oldName,newName);
-    }
 }

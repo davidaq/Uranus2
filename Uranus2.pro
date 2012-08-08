@@ -13,7 +13,8 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     console.cpp \
-    cfg.cpp
+    cfg.cpp \
+    mainwindow_benchMenuActions.cpp
 
 HEADERS  += mainwindow.h \
     console.h \
