@@ -35,6 +35,8 @@ private slots:
 
     // bench menu actions
     void benchMenu_mkdir();
+    void benchMenu_newFile();
+    void benchMenu_rename();
 };
 
 #endif // MAINWINDOW_H

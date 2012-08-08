@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->consoleWidget,SIGNAL(cwdChanged(QString)),SLOT(cwdChanged(QString)));
 
     benchModel=new QFileSystemModel;
+    benchModel->setReadOnly(false);
     benchModel->setNameFilterDisables(false);
 
     ui->fileView->setModel(benchModel);
@@ -56,13 +57,21 @@ void MainWindow::on_benchFileFilter_textChanged(const QString &filter)
 void MainWindow::on_fileView_customContextMenuRequested(const QPoint &pos)
 {
     static QMenu menu(this);
-    QModelIndex item=ui->fileView->currentIndex();
+    QModelIndex item=ui->fileView->indexAt(pos);
+    fileView->setCurrentIndex(item);
+
     benchMenuTarget=item;
     menu.clear();
 
     menu.addAction( QIcon(":/images/folder-new.png") , "Make Directory" , this , SLOT(benchMenu_mkdir()) );
-    if(benchModel->isDir(item))
+    menu.addAction( QIcon(":/images/document-new.png") , "Create empty file" , this , SLOT(benchMenu_newFile()) );
+
+    if(item.isValid())
     {
+        menu.addAction( "Rename",this,SLOT(benchMenu_rename()) );
+        if(benchModel->isDir(item))
+        {
+        }
     }
     menu.move(ui->fileView->mapToGlobal(pos));
     menu.show();

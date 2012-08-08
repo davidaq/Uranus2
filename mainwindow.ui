@@ -120,6 +120,9 @@
        <property name="contextMenuPolicy">
         <enum>Qt::CustomContextMenu</enum>
        </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::EditKeyPressed</set>
+       </property>
        <property name="animated">
         <bool>true</bool>
        </property>
