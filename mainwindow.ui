@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>620</width>
-    <height>536</height>
+    <height>541</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,13 +46,15 @@
    </widget>
    <widget class="QMenu" name="menu_Settings">
     <property name="title">
-     <string>&amp;Settings</string>
+     <string>&amp;Options</string>
     </property>
+    <addaction name="actionConfiguration"/>
    </widget>
    <widget class="QMenu" name="menu_Control">
     <property name="title">
      <string>&amp;Control</string>
     </property>
+    <addaction name="actionRestart_Console"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Control"/>
@@ -68,6 +70,9 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionRestart_Console"/>
+   <addaction name="separator"/>
+   <addaction name="actionConfiguration"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="navigateDock">
@@ -111,7 +116,7 @@
      <item row="2" column="0">
       <widget class="QLineEdit" name="benchFileFilter">
        <property name="placeholderText">
-        <string>Display Filter</string>
+        <string>Display Filter ( separate with ; )</string>
        </property>
       </widget>
      </item>
@@ -122,6 +127,15 @@
        </property>
        <property name="editTriggers">
         <set>QAbstractItemView::EditKeyPressed</set>
+       </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::DragDrop</enum>
+       </property>
+       <property name="defaultDropAction">
+        <enum>Qt::MoveAction</enum>
+       </property>
+       <property name="autoExpandDelay">
+        <number>1000</number>
        </property>
        <property name="animated">
         <bool>true</bool>
@@ -149,6 +163,30 @@
    </attribute>
    <widget class="Console" name="consoleWidget"/>
   </widget>
+  <action name="actionConfiguration">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/config.png</normaloff>:/images/config.png</iconset>
+   </property>
+   <property name="text">
+    <string>Configuration</string>
+   </property>
+   <property name="shortcut">
+    <string>F10</string>
+   </property>
+  </action>
+  <action name="actionRestart_Console">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/refresh.png</normaloff>:/images/refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Restart Console</string>
+   </property>
+   <property name="shortcut">
+    <string>F12</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

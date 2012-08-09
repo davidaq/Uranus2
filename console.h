@@ -21,6 +21,10 @@ public:
     ~Console();
     void cd(QString path);
     QString getCwd();
+    void prepareCmd(QString);
+
+public slots:
+    void shellRestart();
     
 private slots:
     void on_stackedWidget_currentChanged(int arg1);
@@ -28,19 +32,25 @@ private slots:
     void on_toMulti_clicked();
     void shellOutput();
     void shellStderr();
+    void shellAskRestart();
     void shellError(QProcess::ProcessError);
     void shellStarted();
-    void shellRestart();
     void runInput();
     void delayedInit();
     void viewHistory();
 
+    void delayedOutput();
+
 private:
+    bool delayedOutputOn;
+    QStringList outputBuffer;
     QString cwd;
     QStringList cmdList;
     int cursor;
     QProcess shell;
     QAction enter,ctrlEnter,prev,next;
+
+    void output(const QString& msg,const QString& color="");
 
     Ui::Console *ui;
     void resizeEvent(QResizeEvent *);

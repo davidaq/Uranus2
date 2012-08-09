@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "configdlg.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QDebug>
@@ -16,17 +17,33 @@ MainWindow::MainWindow(QWidget *parent) :
     benchModel->setReadOnly(false);
     benchModel->setNameFilterDisables(false);
 
+    QVariant var=Cfg::get("benchFilter");
+    if(var.isValid())
+    {
+        ui->benchFileFilter->setText(var.toString());
+    }
+
     ui->fileView->setModel(benchModel);
     ui->fileView->hideColumn(1);
     ui->fileView->hideColumn(2);
     ui->fileView->hideColumn(3);
 
-    fileView=ui->fileView;
+    connect(ui->actionRestart_Console,SIGNAL(triggered()),ui->consoleWidget,SLOT(shellRestart()));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+Console* MainWindow::console()
+{
+    return ui->consoleWidget;
+}
+
+QTreeView* MainWindow::fileView()
+{
+    return ui->fileView;
 }
 
 void MainWindow::cwdChanged(QString path)
@@ -52,36 +69,14 @@ void MainWindow::on_setCwdBtn_clicked()
 void MainWindow::on_benchFileFilter_textChanged(const QString &filter)
 {
     benchModel->setNameFilters((filter.isEmpty()?"*":filter).split(';'));
+    Cfg::set("benchFilter",filter);
 }
 
-void MainWindow::on_fileView_customContextMenuRequested(const QPoint &pos)
+void MainWindow::on_actionConfiguration_triggered()
 {
-    static QMenu menu(this);
-    QModelIndex item=ui->fileView->indexAt(pos);
-    fileView->setCurrentIndex(item);
-
-    benchMenuTarget=item;
-    menu.clear();
-
-    menu.addAction( QIcon(":/images/folder-new.png") , "Make Directory" , this , SLOT(benchMenu_mkdir()) );
-    menu.addAction( QIcon(":/images/document-new.png") , "Create empty file" , this , SLOT(benchMenu_newFile()) );
-
-    if(item.isValid())
-    {
-        menu.addAction( "Rename",this,SLOT(benchMenu_rename()) );
-        if(benchModel->isDir(item))
-        {
-        }
-    }
-    menu.move(ui->fileView->mapToGlobal(pos));
-    menu.show();
+    Cfg::pauseAlarm(true);
+    ConfigDlg dlg;
+    dlg.exec();
+    Cfg::pauseAlarm(false);
 }
 
-// Bench Menu Actions
-void MainWindow::on_action_BenchRename_triggered()
-{
-}
-
-void MainWindow::on_benchView_itemChanged(QTreeWidgetItem *item, int)
-{
-}

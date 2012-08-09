@@ -3,6 +3,8 @@
 #include "ui_console.h"
 #include <QTextCodec>
 #include <QTimer>
+#include <QMessageBox>
+#include <QDebug>
 
 
 Console::Console(QWidget *parent) :
@@ -11,7 +13,6 @@ Console::Console(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    shell.setEnvironment(QProcess::systemEnvironment());
     connect(&shell,SIGNAL(readyReadStandardOutput()),SLOT(shellOutput()));
     connect(&shell,SIGNAL(readyReadStandardError()),SLOT(shellStderr()));
     connect(&shell,SIGNAL(error(QProcess::ProcessError)),SLOT(shellError(QProcess::ProcessError)));
@@ -38,6 +39,11 @@ Console::Console(QWidget *parent) :
         cwd=var.toString();
     else
         cwd=".";
+
+    Cfg::listen("PythonPath",this,SLOT(shellAskRestart()));
+    Cfg::listen("ConsolePATH",this,SLOT(shellAskRestart()));
+
+    delayedOutputOn=false;
 }
 
 Console::~Console()
@@ -56,7 +62,7 @@ void Console::on_stackedWidget_currentChanged(int)
 void Console::delayedInit()
 {
     ui->line->setFocus();
-    shell.start("python -i");
+    shellRestart();
 }
 
 void Console::on_toSingle_clicked()
@@ -96,7 +102,7 @@ void Console::shellOutput()
     QString data=QTextCodec::codecForLocale()->toUnicode(raw);
 
     // signal outputs
-    if(data.left(3)=="~~~")
+    if(data.left(3)=="~`~")
     {
         data=data.mid(3);
         int p;
@@ -108,29 +114,45 @@ void Console::shellOutput()
             {
                 cwd=msg;
                 Cfg::set("benchCwd",msg);
+                qDebug()<<msg;
                 emit cwdChanged(cwd);
             }
         }
     }else
     {
-        ui->output->appendHtml("<font><pre>"+data+"</pre></font>");
-        ui->output->moveCursor(QTextCursor::End);
-        ui->output->moveCursor(QTextCursor::StartOfLine);
+        output(data);
     }
     ui->line->setFocus();
+}
+
+void Console::output(const QString &msg, const QString &color)
+{
+    outputBuffer<<"<font"+(color.isEmpty()?"":" color=\""+color+"\"")+"><pre>"+msg+"</pre></font>";
+    if(outputBuffer.count()>120)
+        outputBuffer.pop_front();
+    if(!delayedOutputOn)
+    {
+        delayedOutputOn=true;
+        QTimer::singleShot(200,this,SLOT(delayedOutput()));
+    }
+}
+
+void Console::delayedOutput()
+{
+    delayedOutputOn=false;
+    ui->output->clear();
+    ui->output->appendHtml(outputBuffer.join(""));
+    ui->output->moveCursor(QTextCursor::End);
+    ui->output->moveCursor(QTextCursor::StartOfLine);
 }
 
 void Console::shellStderr()
 {
     QByteArray raw=shell.readAllStandardError();
     QString data=QTextCodec::codecForLocale()->toUnicode(raw);
-    if(data.left(3)=="...")
+    if(data.replace(QRegExp("\\.\\.\\.|\\>\\>\\>"),"").trimmed().isEmpty())
         return;
-    if(data.right(4).left(3)==">>>")
-        data=data.left(data.length()-4);
-    ui->output->appendHtml("<font color=\"red\"><pre>"+data+"</pre></font>");
-    ui->output->moveCursor(QTextCursor::End);
-    ui->output->moveCursor(QTextCursor::StartOfLine);
+    output(data,"red");
     ui->line->setFocus();
 }
 
@@ -145,12 +167,39 @@ void Console::shellStarted()
     shell.write("from os import chdir as _____cd;");
     shell.write("from os import chdir as _____cd;");
     cd(getCwd());
+    outputBuffer.clear();
     ui->output->clear();
+}
+
+void Console::shellAskRestart()
+{
+    if(QMessageBox::Yes==QMessageBox::information(this,"Restart console?","Some settings related to the console has changed.\nDo you want to restart it?",QMessageBox::Yes|QMessageBox::No,QMessageBox::Yes))
+        shellRestart();
 }
 
 void Console::shellRestart()
 {
-    shell.start("python -i");
+    if(shell.state()==QProcess::Running)
+    {
+        shell.terminate();
+        return;
+    }
+    QProcessEnvironment env=QProcessEnvironment::systemEnvironment();
+    QVariant var=Cfg::get("ConsolePATH");
+    if(var.isValid()&&!var.toString().isEmpty())
+    {
+        env.insert("PATH",var.toString().replace("%PATH%",env.value("PATH")));
+        env.insert("PYTHONPATH",var.toString().replace("%PATH%","."));
+    }
+    shell.setProcessEnvironment(env);
+    var=Cfg::get("PythonPath");
+    QString cmd="python";
+    if(!var.isValid())
+    {
+        Cfg::set("PythonPath",cmd);
+    }else
+        cmd=var.toString();
+    shell.start(cmd+" -i");
 }
 
 void Console::runInput()
@@ -189,11 +238,13 @@ void Console::runInput()
         }
         cursor=-1;
     }
-    ui->output->appendHtml("<font color=\"blue\"><b><pre>&gt;&gt;&gt; "+cmd+"</b></pre></font>");
+    output("<b>&gt;&gt;&gt; "+cmd+"</b>","blue");
     if(!cmd.isEmpty()&&cmd.at(0)==':')
     {
+        // Special commands
         if(cmd==":cls"||cmd==":clear")
         {
+            outputBuffer.clear();
             ui->output->clear();
             return;
         }else if(cmd==":cwd")
@@ -203,13 +254,15 @@ void Console::runInput()
         {
             cd(cmd.mid(4));
             return;
+        }else if(cmd==":vardump"){
+            cmd="_______r=set(('_______r','_______','_____cd','_____cwd','_____sys','__name__','__package__','__doc__','__builtins__'))\nfor _______ in dir():\n\tif not _______ in _______r:print _______,'['+eval(_______).__class__.__name__+']'\n\ndel _______;del _______r";
         }else if(cmd==":break")
         {
             cmd="^c";
             return;
         }else
         {
-            cmd="_______=_____sys(\"\"\" "+cmd.mid(1)+" \"\"\")";
+            cmd="_______=_____sys(\"\"\" "+cmd.mid(1)+" \"\"\");del _______";
         }
     }
     shell.write(QTextCodec::codecForLocale()->fromUnicode(cmd+'\n'));
@@ -217,7 +270,7 @@ void Console::runInput()
 
 void Console::cd(QString path)
 {
-    QString cmd="_____cd('''"+path+"''');print '~~~cwd',_____cwd()";
+    QString cmd="_____cd('''"+path+"''');print '~`~cwd',_____cwd()";
     shell.write(QTextCodec::codecForLocale()->fromUnicode(cmd+'\n'));
 }
 
@@ -255,4 +308,12 @@ void Console::viewHistory()
         ui->stackedWidget->setCurrentIndex(0);
         ui->line->setText(cmd);
     }
+}
+
+void Console::prepareCmd(QString cmd)
+{
+    ui->stackedWidget->setCurrentIndex(0);
+    ui->line->setText(cmd);
+    ui->line->setFocus();
+    ui->line->setCursorPosition(cmd.length());
 }

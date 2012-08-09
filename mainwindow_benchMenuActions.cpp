@@ -1,13 +1,45 @@
 #include "mainwindow.h"
-#include <QInputDialog>
+#include "console.h"
+#include <QMessageBox>
+#include <QMenu>
 #include <QDebug>
+
+void MainWindow::on_fileView_customContextMenuRequested(const QPoint &pos)
+{
+    static QMenu menu(this);
+    QModelIndex item=fileView()->indexAt(pos);
+    fileView()->setCurrentIndex(item);
+
+    benchMenuTarget=item;
+    menu.clear();
+
+    menu.addAction( QIcon(":/images/folder-new.png") , "Make Directory" , this , SLOT(benchMenu_mkdir()) );
+    menu.addAction( QIcon(":/images/document-new.png") , "Create empty file" , this , SLOT(benchMenu_newFile()) );
+
+    if(item.isValid())
+    {
+        menu.addSeparator();
+        menu.addAction( "Rename",this,SLOT(benchMenu_rename()) );
+        if(benchModel->isDir(item))
+        {
+            menu.addAction( "Set as base directory",this,SLOT(benchMenu_setbase()) );
+        }else
+        {
+            menu.addAction( "Run in console",this,SLOT(benchMenu_runInConsole()) );
+        }
+        menu.addSeparator();
+        menu.addAction( QIcon(":/images/delete.png"),"Delete",this,SLOT(benchMenu_delete()) );
+    }
+    menu.move(fileView()->mapToGlobal(pos));
+    menu.show();
+}
 
 void MainWindow::benchMenu_mkdir()
 {
     QModelIndex item;
     if(!benchMenuTarget.isValid())
     {
-        item=fileView->rootIndex();
+        item=fileView()->rootIndex();
     }else if(benchModel->isDir(benchMenuTarget))
     {
         item=benchMenuTarget;
@@ -19,43 +51,85 @@ void MainWindow::benchMenu_mkdir()
     QString name="New Folder";
     if(dir.exists(name))
     {
-        int newI=1;
+        int newI=2;
         while(dir.exists(name+QString().sprintf(" %d",newI)))
             newI++;
         name+=QString().sprintf(" %d",newI);
     }
     item=benchModel->mkdir(item,name);
-    fileView->setCurrentIndex(item);
-    fileView->edit(item);
+    fileView()->setCurrentIndex(item);
+    fileView()->edit(item);
 }
 
 void MainWindow::benchMenu_newFile()
 {
-    QDir dir;
+
+    QModelIndex item;
     if(!benchMenuTarget.isValid())
     {
-        dir=benchModel->rootDirectory();
+        item=fileView()->rootIndex();
     }else if(benchModel->isDir(benchMenuTarget))
     {
-        dir=QDir(benchModel->filePath(benchMenuTarget));
+        item=benchMenuTarget;
     }else
     {
-        dir=QDir(benchModel->filePath(benchMenuTarget.parent()));
+        item=benchMenuTarget.parent();
     }
-    QString name;
-    bool ok;
-    do{
-        name=QInputDialog::getText(this,"Create a empty file","New file name",QLineEdit::Normal,"",&ok);
-    }while(ok&&!name.isEmpty()&&dir.exists(name));
-    if(ok&&!name.isEmpty())
+    QDir dir(benchModel->filePath(item));
+    QString name="Empty File";
+    if(dir.exists(name))
     {
-        QFile fp(dir.absoluteFilePath(name));
-        if(fp.open(QFile::ReadWrite))
-            fp.close();
+        int newI=2;
+        while(dir.exists(name+QString().sprintf(" %d",newI)))
+            newI++;
+        name+=QString().sprintf(" %d",newI);
     }
+
+    name=dir.absoluteFilePath(name);
+    QFile fp(name);
+    if(fp.open(QFile::ReadWrite))
+        fp.close();
+    item=benchModel->index(name);
+    fileView()->setCurrentIndex(item);
+    fileView()->edit(item);
 }
 
 void MainWindow::benchMenu_rename()
 {
-    fileView->edit(benchMenuTarget);
+    fileView()->edit(benchMenuTarget);
 }
+
+void MainWindow::benchMenu_delete()
+{
+    QString name=benchModel->fileName(benchMenuTarget);
+    if(QMessageBox::Yes==QMessageBox::warning(
+        this,"Delete confirm","Are you sure you want to delete:\n  "+name+"\nTHIS CAN NOT BE UNDONE!",
+        QMessageBox::Yes|QMessageBox::No))
+    {
+        benchModel->remove(benchMenuTarget);
+    }
+}
+
+void MainWindow::benchMenu_runInConsole()
+{
+    QString path=benchModel->filePath(benchMenuTarget);
+    QDir base=QDir(benchModel->rootPath());
+    QFileInfo info(path);
+    path=base.relativeFilePath(path);
+    QString ext=info.suffix();
+    QString cmd;
+    if(ext=="py"||ext=="pyt")
+    {
+        cmd="execfile('"+path+"')";
+    }else
+    {
+        cmd=path;
+    }
+    console()->prepareCmd(cmd);
+}
+
+void MainWindow::benchMenu_setbase()
+{
+    console()->cd(benchModel->filePath(benchMenuTarget));
+}
+

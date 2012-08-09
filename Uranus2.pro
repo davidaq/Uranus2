@@ -14,14 +14,17 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     console.cpp \
     cfg.cpp \
-    mainwindow_benchMenuActions.cpp
+    mainwindow_benchMenuActions.cpp \
+    configdlg.cpp
 
 HEADERS  += mainwindow.h \
     console.h \
-    cfg.h
+    cfg.h \
+    configdlg.h
 
 FORMS    += mainwindow.ui \
-    console.ui
+    console.ui \
+    configdlg.ui
 
 RESOURCES += \
     res.qrc
