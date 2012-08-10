@@ -20,8 +20,8 @@ Console::Console(QWidget *parent) :
     connect(&shell,SIGNAL(finished(int)),SLOT(shellRestart()));
 
     addActions(QList<QAction*>()<<&enter<<&ctrlEnter<<&prev<<&next);
-    prev.setShortcut(QKeySequence::MoveToPreviousPage);
-    next.setShortcut(QKeySequence::MoveToNextPage);
+    prev.setShortcuts(QList<QKeySequence>()<<QKeySequence::MoveToPreviousPage<<QKeySequence::MoveToPreviousLine);
+    next.setShortcuts(QList<QKeySequence>()<<QKeySequence::MoveToNextPage<<QKeySequence::MoveToNextLine);
     connect(&prev,SIGNAL(triggered()),SLOT(viewHistory()));
     connect(&next,SIGNAL(triggered()),SLOT(viewHistory()));
     enter.setShortcut(QKeySequence("Return"));
@@ -54,9 +54,18 @@ Console::~Console()
     delete ui;
 }
 
-void Console::on_stackedWidget_currentChanged(int)
+void Console::on_stackedWidget_currentChanged(int index)
 {
     resizeEvent(0);
+    if(index==0)
+    {
+        prev.setShortcuts(QList<QKeySequence>()<<QKeySequence::MoveToPreviousPage<<QKeySequence::MoveToPreviousLine);
+        next.setShortcuts(QList<QKeySequence>()<<QKeySequence::MoveToNextPage<<QKeySequence::MoveToNextLine);
+    }else
+    {
+        prev.setShortcut(QKeySequence::MoveToPreviousPage);
+        next.setShortcut(QKeySequence::MoveToNextPage);
+    }
 }
 
 void Console::delayedInit()
@@ -255,7 +264,7 @@ void Console::runInput()
             cd(cmd.mid(4));
             return;
         }else if(cmd==":vardump"){
-            cmd="_______r=set(('_______r','_______','_____cd','_____cwd','_____sys','__name__','__package__','__doc__','__builtins__'))\nfor _______ in dir():\n\tif not _______ in _______r:print _______,'['+eval(_______).__class__.__name__+']'\n\ndel _______;del _______r";
+            cmd="_______r=set(('_______r','_______','_____cd','_____cwd','_____sys','__name__','__package__','__doc__','__builtins__'))\nfor _______ in dir():\n\tif not _______ in _______r:print(_______+' ['+eval(_______).__class__.__name__+']')\n\ndel _______;del _______r";
         }else if(cmd==":break")
         {
             cmd="^c";
@@ -270,7 +279,7 @@ void Console::runInput()
 
 void Console::cd(QString path)
 {
-    QString cmd="_____cd('''"+path+"''');print '~`~cwd',_____cwd()";
+    QString cmd="_____cd('''"+path+"''');print('~`~cwd '+_____cwd())";
     shell.write(QTextCodec::codecForLocale()->fromUnicode(cmd+'\n'));
 }
 
