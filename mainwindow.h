@@ -25,6 +25,8 @@ private:
     Ui::MainWindow *ui;
     QFileSystemModel *benchModel;
     QModelIndex benchMenuTarget;
+    QList<QString> history,historyBack;
+    QString benchCurrentPath;
 
 private slots:
     void cwdChanged(QString);
@@ -40,6 +42,11 @@ private slots:
     void benchMenu_runInConsole();
     void benchMenu_setbase();
     void on_actionConfiguration_triggered();
+    void on_benchToolUp_clicked();
+    void on_benchToolVisible_clicked(bool);
+    void on_benchToolMkdir_clicked();
+    void on_benchToolBack_clicked();
+    void on_benchToolNext_clicked();
 };
 
 #endif // MAINWINDOW_H

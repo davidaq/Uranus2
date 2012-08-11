@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>620</width>
-    <height>541</height>
+    <height>568</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -68,7 +68,7 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
    <addaction name="actionRestart_Console"/>
    <addaction name="separator"/>
@@ -78,7 +78,7 @@
   <widget class="QDockWidget" name="navigateDock">
    <property name="minimumSize">
     <size>
-     <width>130</width>
+     <width>176</width>
      <height>246</height>
     </size>
    </property>
@@ -96,7 +96,7 @@
      <property name="spacing">
       <number>0</number>
      </property>
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QPushButton" name="setCwdBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
@@ -113,14 +113,14 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QLineEdit" name="benchFileFilter">
        <property name="placeholderText">
         <string>Display Filter ( separate with ; )</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="2" column="0">
       <widget class="QTreeView" name="fileView">
        <property name="contextMenuPolicy">
         <enum>Qt::CustomContextMenu</enum>
@@ -144,6 +144,83 @@
         <bool>false</bool>
        </attribute>
       </widget>
+     </item>
+     <item row="0" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QToolButton" name="benchToolBack">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="res.qrc">
+           <normaloff>:/images/draw-arrow-back.png</normaloff>:/images/draw-arrow-back.png</iconset>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="benchToolNext">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="res.qrc">
+           <normaloff>:/images/draw-arrow-forward.png</normaloff>:/images/draw-arrow-forward.png</iconset>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="benchToolUp">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="res.qrc">
+           <normaloff>:/images/draw-arrow-up.png</normaloff>:/images/draw-arrow-up.png</iconset>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="benchToolVisible">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="res.qrc">
+           <normaloff>:/images/visible.png</normaloff>:/images/visible.png</iconset>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="benchToolMkdir">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="res.qrc">
+           <normaloff>:/images/draw-cross.png</normaloff>:/images/draw-cross.png</iconset>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>

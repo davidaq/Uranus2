@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->fileView->hideColumn(3);
 
     connect(ui->actionRestart_Console,SIGNAL(triggered()),ui->consoleWidget,SLOT(shellRestart()));
+
+    ui->benchToolBack->setEnabled(false);
+    ui->benchToolNext->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -55,6 +58,18 @@ void MainWindow::cwdChanged(QString path)
     ui->setCwdBtn->setToolTip(path);
     benchModel->setRootPath(path);
     ui->fileView->setRootIndex(benchModel->index(path));
+
+    if(!benchCurrentPath.isEmpty()&&benchCurrentPath!=path)
+    {
+        historyBack.clear();
+        ui->benchToolNext->setEnabled(false);
+        if(!history.isEmpty())
+            ui->benchToolBack->setEnabled(true);
+        history.append(benchCurrentPath);
+        if(history.count()>50)
+            history.pop_front();
+    }
+    benchCurrentPath=path;
 }
 
 void MainWindow::on_setCwdBtn_clicked()
@@ -80,3 +95,49 @@ void MainWindow::on_actionConfiguration_triggered()
     Cfg::pauseAlarm(false);
 }
 
+
+void MainWindow::on_benchToolUp_clicked()
+{
+    ui->consoleWidget->cd("..");
+}
+
+void MainWindow::on_benchToolVisible_clicked(bool down)
+{
+    if(down)
+    {
+        benchModel->setFilter(benchModel->filter()|QDir::Hidden);
+    }else
+    {
+        benchModel->setFilter(~((~benchModel->filter())|QDir::Hidden));
+    }
+}
+
+void MainWindow::on_benchToolMkdir_clicked()
+{
+    benchMenuTarget=QModelIndex();
+    benchMenu_mkdir();
+}
+
+void MainWindow::on_benchToolBack_clicked()
+{
+    historyBack.append(benchCurrentPath);
+    QString path=history.last();
+    history.pop_back();
+    ui->consoleWidget->cd(path);
+    if(history.isEmpty())
+        ui->benchToolBack->setEnabled(false);
+    ui->benchToolNext->setEnabled(true);
+    benchCurrentPath=path;
+}
+
+void MainWindow::on_benchToolNext_clicked()
+{
+    history.append(benchCurrentPath);
+    QString path=historyBack.last();
+    historyBack.pop_back();
+    ui->consoleWidget->cd(path);
+    if(historyBack.isEmpty())
+        ui->benchToolNext->setEnabled(false);
+    ui->benchToolBack->setEnabled(true);
+    benchCurrentPath=path;
+}
