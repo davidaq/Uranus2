@@ -15,16 +15,21 @@ SOURCES += main.cpp\
     console.cpp \
     cfg.cpp \
     mainwindow_benchMenuActions.cpp \
-    configdlg.cpp
+    configdlg.cpp \
+    udocument.cpp \
+    ualgorithmeditor.cpp
 
 HEADERS  += mainwindow.h \
     console.h \
     cfg.h \
-    configdlg.h
+    configdlg.h \
+    udocument.h \
+    ualgorithmeditor.h
 
 FORMS    += mainwindow.ui \
     console.ui \
-    configdlg.ui
+    configdlg.ui \
+    ualgorithmeditor.ui
 
 RESOURCES += \
     res.qrc

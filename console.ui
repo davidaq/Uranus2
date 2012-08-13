@@ -106,7 +106,9 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: rgb(30,30,30);</string>
+    <string notr="true">#output{
+	border:none
+}</string>
    </property>
    <property name="lineWrapMode">
     <enum>QPlainTextEdit::NoWrap</enum>

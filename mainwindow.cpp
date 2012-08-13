@@ -1,10 +1,12 @@
 #include "mainwindow.h"
 #include "configdlg.h"
+#include "ualgorithmeditor.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QDebug>
 #include <QDir>
 #include <QTimer>
+#include <QMdiSubWindow>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -140,4 +142,12 @@ void MainWindow::on_benchToolNext_clicked()
         ui->benchToolNext->setEnabled(false);
     ui->benchToolBack->setEnabled(true);
     benchCurrentPath=path;
+}
+
+void MainWindow::on_actionNew_Algorithm_triggered()
+{
+    UAlgorithmEditor* editor=new UAlgorithmEditor;
+    QMdiSubWindow* sub=ui->mdiArea->addSubWindow(editor);
+    editor->setWindowTitle("Al");
+    sub->setAttribute(Qt::WA_DeleteOnClose);
 }

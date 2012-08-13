@@ -47,6 +47,7 @@ private slots:
     void on_benchToolMkdir_clicked();
     void on_benchToolBack_clicked();
     void on_benchToolNext_clicked();
+    void on_actionNew_Algorithm_triggered();
 };
 
 #endif // MAINWINDOW_H

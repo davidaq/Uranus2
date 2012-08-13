@@ -21,10 +21,25 @@
     <item row="0" column="0">
      <widget class="QMdiArea" name="mdiArea">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="activationOrder">
+       <enum>QMdiArea::StackingOrder</enum>
+      </property>
+      <property name="viewMode">
+       <enum>QMdiArea::TabbedView</enum>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="tabsMovable">
+       <bool>true</bool>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
       </property>
      </widget>
     </item>
@@ -43,6 +58,11 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="actionNew_Algorithm"/>
+    <addaction name="actionOpen"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSave_All"/>
    </widget>
    <widget class="QMenu" name="menu_Settings">
     <property name="title">
@@ -54,6 +74,7 @@
     <property name="title">
      <string>&amp;Control</string>
     </property>
+    <addaction name="actionNew_Displayer"/>
     <addaction name="actionRestart_Console"/>
    </widget>
    <addaction name="menu_File"/>
@@ -70,6 +91,13 @@
    <attribute name="toolBarBreak">
     <bool>true</bool>
    </attribute>
+   <addaction name="actionNew_Algorithm"/>
+   <addaction name="actionNew_Displayer"/>
+   <addaction name="actionOpen"/>
+   <addaction name="separator"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionSave_All"/>
+   <addaction name="separator"/>
    <addaction name="actionRestart_Console"/>
    <addaction name="separator"/>
    <addaction name="actionConfiguration"/>
@@ -262,6 +290,69 @@
    </property>
    <property name="shortcut">
     <string>F12</string>
+   </property>
+  </action>
+  <action name="actionNew_Algorithm">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/document-new.png</normaloff>:/images/document-new.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Algorithm</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/document-save.png</normaloff>:/images/document-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionNew_Displayer">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/add-display.png</normaloff>:/images/add-display.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Displayer</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+N</string>
+   </property>
+  </action>
+  <action name="actionSave_All">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/document-save-all.png</normaloff>:/images/document-save-all.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save All</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/document-open.png</normaloff>:/images/document-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Algorithm or Display Object</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>

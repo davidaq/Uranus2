@@ -24,5 +24,8 @@
         <file>images/draw-arrow-up.png</file>
         <file>images/draw-cross.png</file>
         <file>images/visible.png</file>
+        <file>images/add-display.png</file>
+        <file>images/document-save-all.png</file>
+        <file>images/document-open.png</file>
     </qresource>
 </RCC>
