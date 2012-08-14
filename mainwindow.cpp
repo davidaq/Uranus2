@@ -7,7 +7,6 @@
 #include <QDir>
 #include <QTimer>
 #include <QMdiSubWindow>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -148,6 +147,15 @@ void MainWindow::on_actionNew_Algorithm_triggered()
 {
     UAlgorithmEditor* editor=new UAlgorithmEditor;
     QMdiSubWindow* sub=ui->mdiArea->addSubWindow(editor);
-    editor->setWindowTitle("Al");
-    sub->setAttribute(Qt::WA_DeleteOnClose);
+    sub->showMaximized();
+}
+
+void MainWindow::on_actionCasacaded_Display_triggered()
+{
+    ui->mdiArea->cascadeSubWindows();
+}
+
+void MainWindow::on_actionTiled_Display_triggered()
+{
+    ui->mdiArea->tileSubWindows();
 }

@@ -17,14 +17,16 @@ SOURCES += main.cpp\
     mainwindow_benchMenuActions.cpp \
     configdlg.cpp \
     udocument.cpp \
-    ualgorithmeditor.cpp
+    ualgorithmeditor.cpp \
+    funclistitem.cpp
 
 HEADERS  += mainwindow.h \
     console.h \
     cfg.h \
     configdlg.h \
     udocument.h \
-    ualgorithmeditor.h
+    ualgorithmeditor.h \
+    funclistitem.h
 
 FORMS    += mainwindow.ui \
     console.ui \

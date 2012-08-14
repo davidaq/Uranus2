@@ -27,5 +27,13 @@
         <file>images/add-display.png</file>
         <file>images/document-save-all.png</file>
         <file>images/document-open.png</file>
+        <file>images/algorithm/branch.png</file>
+        <file>images/algorithm/calc.png</file>
+        <file>images/algorithm/command.png</file>
+        <file>images/algorithm/document.png</file>
+        <file>images/algorithm/function.png</file>
+        <file>images/algorithm/import.png</file>
+        <file>images/algorithm/loop.png</file>
+        <file>images/algorithm/var.png</file>
     </qresource>
 </RCC>
