@@ -35,6 +35,7 @@ private:
     bool edited;
     QString name;
     void updateTitle();
+    void import(QString,bool builtin=false);
 };
 
 #endif // UALGORITHMEDITOR_H

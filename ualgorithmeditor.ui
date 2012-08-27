@@ -95,6 +95,15 @@
         <normaloff>:/images/algorithm/import.png</normaloff>:/images/algorithm/import.png</iconset>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>Built-in Module</string>
+      </property>
+      <property name="icon">
+       <iconset resource="res.qrc">
+        <normaloff>:/images/algorithm/command.png</normaloff>:/images/algorithm/command.png</iconset>
+      </property>
+     </item>
     </widget>
    </item>
   </layout>

@@ -21,6 +21,7 @@ private:
 private slots:
     void changed();
     void on_pythonLocOpen_clicked();
+    void on_builtinDirOpen_clicked();
 };
 
 #endif // CONFIGDLG_H

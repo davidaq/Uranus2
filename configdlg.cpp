@@ -10,6 +10,7 @@ ConfigDlg::ConfigDlg(QWidget *parent) :
     ui->setupUi(this);
     init(ui->pythonLoc);
     init(ui->consolePath);
+    init(ui->builtinDir);
 }
 
 ConfigDlg::~ConfigDlg()
@@ -46,4 +47,11 @@ void ConfigDlg::on_pythonLocOpen_clicked()
     QString path=QFileDialog::getOpenFileName(this,"Python location");
     if(!path.isEmpty())
         ui->pythonLoc->setText(path);
+}
+
+void ConfigDlg::on_builtinDirOpen_clicked()
+{
+    QString path=QFileDialog::getExistingDirectory(this,"Builtin Modules Dir");
+    if(!path.isEmpty())
+        ui->builtinDir->setText(path);
 }

@@ -1,8 +1,10 @@
 #include "ualgorithmeditor.h"
 #include "ui_ualgorithmeditor.h"
 #include "funclistitem.h"
+#include "cfg.h"
 #include <QDebug>
 #include <QMenu>
+#include <QDir>
 
 UAlgorithmEditor::UAlgorithmEditor(QWidget *parent) :
     QWidget(parent),
@@ -16,8 +18,8 @@ UAlgorithmEditor::UAlgorithmEditor(QWidget *parent) :
     importedModule->setExpanded(true);
 
     FuncListItem* item=new FuncListItem(ui->functions);
-    item->setFunctionName("Main");
-    item->setHintText("Entrance to a algorithm");
+    item->setFunctionName("Entrance");
+    item->setHintText("Start point of this algorithm");
     item->setIcon(0,QIcon(":/images/algorithm/function.png"));
     currentModule->addChild(item);
 
@@ -26,8 +28,18 @@ UAlgorithmEditor::UAlgorithmEditor(QWidget *parent) :
     setWindowIcon(QIcon(":/images/editor.png"));
 
     edited=true;
-    name="Untitled Algorithm";
+    name="Untitled";
     updateTitle();
+
+    QVariant var=Cfg::get("BuiltinDir");
+    if(var.isValid())
+    {
+        QDir dir(var.toString());
+        foreach(QString file,dir.entryList(QStringList()<<"*.py",QDir::Files))
+        {
+            import(dir.absoluteFilePath(file),true);
+        }
+    }
 }
 
 UAlgorithmEditor::~UAlgorithmEditor()
@@ -112,4 +124,16 @@ void UAlgorithmEditor::on_hintTextChanged()
     tcur.setPosition(tcurpos);
     ui->hintText->setTextCursor(tcur);
     lock=false;
+}
+
+void UAlgorithmEditor::import(QString path,bool)
+{
+    QFile file(path);
+    if(file.open(QFile::ReadOnly)){
+        QFileInfo finfo(file);
+        QTreeWidgetItem *item=new QTreeWidgetItem;
+        item->setText(0,finfo.baseName());
+        item->setIcon(0,QIcon(":/images/algorithm/command.png"));
+        ui->functions->topLevelItem(2)->addChild(item);
+    }
 }
