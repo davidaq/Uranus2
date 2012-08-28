@@ -1,4 +1,5 @@
 #include "funclistitem.h"
+#include "UAlgTags/ucontainertag.h"
 #include <QtGui>
 #include <QTimer>
 
@@ -10,6 +11,12 @@ FuncListItem::FuncListItem(QTreeWidget *parent,int type) :
     body=0;
     setIcon(0,QIcon(":/images/algorithm/function.png"));
     editable=true;
+}
+
+FuncListItem::~FuncListItem()
+{
+    if(body)
+        delete body;
 }
 
 void FuncListItem::setFunctionName(QString name)
@@ -82,6 +89,13 @@ QTreeWidgetItem* FuncListItem::getBody() const
 void FuncListItem::setBody(QTreeWidgetItem *item)
 {
     body=item;
+}
+
+void FuncListItem::createBody()
+{
+    body=new UContainerTag;
+    body->setIcon(0,QIcon(":/images/algorithm/code.png"));
+    body->setText(0,"Action");
 }
 
 QStringList& FuncListItem::args()

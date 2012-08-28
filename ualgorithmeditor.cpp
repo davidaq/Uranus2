@@ -12,6 +12,9 @@ UAlgorithmEditor::UAlgorithmEditor(QWidget *parent) :
     ui(new Ui::UAlgorithmEditor)
 {
     ui->setupUi(this);
+
+    currentBody=0;
+
     currentModule=ui->functions->topLevelItem(0);
     importedModule=ui->functions->topLevelItem(1);
     ui->functions->topLevelItem(2)->setExpanded(true);
@@ -23,6 +26,7 @@ UAlgorithmEditor::UAlgorithmEditor(QWidget *parent) :
     ui->body->addTopLevelItem(funcTag);
 
     FuncListItem* item=new FuncListItem(ui->functions);
+    item->createBody();
     item->setFunctionName("Entrance");
     item->setHintText("Start point of this algorithm");
     currentModule->addChild(item);
@@ -92,7 +96,13 @@ void UAlgorithmEditor::on_functions_itemClicked(QTreeWidgetItem *rawitem, int )
     if(currentFunction==item)
         return;
     currentFunction=item;
+    ui->body->takeTopLevelItem(1);
     ui->functions->setCurrentItem(item);
+    if(item->getBody())
+    {
+        ui->body->addTopLevelItem(item->getBody());
+        item->getBody()->setExpanded(true);
+    }
     updateTitle();
     ui->body->setEnabled(item->isEditable());
     ui->body->setCurrentItem(0);

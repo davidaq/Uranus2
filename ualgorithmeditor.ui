@@ -88,8 +88,14 @@
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ContiguousSelection</enum>
+     </property>
      <property name="rootIsDecorated">
       <bool>false</bool>
+     </property>
+     <property name="animated">
+      <bool>true</bool>
      </property>
      <attribute name="headerVisible">
       <bool>false</bool>

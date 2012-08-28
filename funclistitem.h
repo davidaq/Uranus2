@@ -9,6 +9,7 @@ class FuncListItem : public QObject,public QTreeWidgetItem
     Q_OBJECT
 public:
     explicit FuncListItem(QTreeWidget *parent,int type=0);
+    ~FuncListItem();
     void setFunctionName(QString);
     void setHintText(QString);
     void dlgEdit();
@@ -17,6 +18,7 @@ public:
     bool isEditable();
     void setText(const QString& text);
     void setBody(QTreeWidgetItem*);
+    void createBody();
     QTreeWidgetItem* getBody() const;
     QStringList& args();
     void update();

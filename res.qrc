@@ -38,5 +38,6 @@
         <file>images/algorithm/code.png</file>
         <file>images/algorithm/switch.png</file>
         <file>images/algorithm/tag.png</file>
+        <file>images/algorithm/return.png</file>
     </qresource>
 </RCC>

@@ -28,7 +28,7 @@ private slots:
 
 private:
     Ui::UAlgorithmEditor *ui;
-    QTreeWidgetItem *currentModule,*importedModule;
+    QTreeWidgetItem *currentModule,*importedModule,*currentBody;
     FuncListItem* currentFunction;
     bool edited;
     QString name;

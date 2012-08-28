@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     ualgorithmeditor.cpp \
     funclistitem.cpp \
     UAlgTags/ufunctiontag.cpp \
-    UAlgTags/ustatictag.cpp
+    UAlgTags/uarghook.cpp \
+    UAlgTags/ucontainertag.cpp \
+    UAlgTags/ucommenttag.cpp
 
 HEADERS  += mainwindow.h \
     console.h \
@@ -31,7 +33,9 @@ HEADERS  += mainwindow.h \
     funclistitem.h \
     UAlgTags/ualgtag.h \
     UAlgTags/ufunctiontag.h \
-    UAlgTags/ustatictag.h
+    UAlgTags/uarghook.h \
+    UAlgTags/ucontainertag.h \
+    UAlgTags/ucommenttag.h
 
 FORMS    += mainwindow.ui \
     console.ui \
