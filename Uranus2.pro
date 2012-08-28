@@ -18,7 +18,9 @@ SOURCES += main.cpp\
     configdlg.cpp \
     udocument.cpp \
     ualgorithmeditor.cpp \
-    funclistitem.cpp
+    funclistitem.cpp \
+    UAlgTags/ufunctiontag.cpp \
+    UAlgTags/ustatictag.cpp
 
 HEADERS  += mainwindow.h \
     console.h \
@@ -26,7 +28,10 @@ HEADERS  += mainwindow.h \
     configdlg.h \
     udocument.h \
     ualgorithmeditor.h \
-    funclistitem.h
+    funclistitem.h \
+    UAlgTags/ualgtag.h \
+    UAlgTags/ufunctiontag.h \
+    UAlgTags/ustatictag.h
 
 FORMS    += mainwindow.ui \
     console.ui \

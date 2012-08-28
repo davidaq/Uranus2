@@ -35,5 +35,8 @@
         <file>images/algorithm/import.png</file>
         <file>images/algorithm/loop.png</file>
         <file>images/algorithm/var.png</file>
+        <file>images/algorithm/code.png</file>
+        <file>images/algorithm/switch.png</file>
+        <file>images/algorithm/tag.png</file>
     </qresource>
 </RCC>

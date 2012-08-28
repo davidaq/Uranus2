@@ -20,35 +20,6 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <item row="1" column="1" colspan="2">
-    <widget class="QTreeView" name="treeView">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="contextMenuPolicy">
-      <enum>Qt::CustomContextMenu</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QPlainTextEdit" name="hintText">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>50</height>
-      </size>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="3" rowspan="2">
     <widget class="QTreeWidget" name="functions">
      <property name="sizePolicy">
@@ -59,9 +30,6 @@
      </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
-     </property>
-     <property name="rootIsDecorated">
-      <bool>false</bool>
      </property>
      <property name="animated">
       <bool>true</bool>
@@ -104,6 +72,33 @@
         <normaloff>:/images/algorithm/command.png</normaloff>:/images/algorithm/command.png</iconset>
       </property>
      </item>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QTreeWidget" name="body">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <attribute name="headerVisible">
+      <bool>false</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string notr="true">1</string>
+      </property>
+     </column>
     </widget>
    </item>
   </layout>

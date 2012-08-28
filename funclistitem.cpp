@@ -5,33 +5,23 @@
 FuncListItem::FuncListItem(QTreeWidget *parent,int type) :
     QTreeWidgetItem((QTreeWidget *)0,type)
 {
-    setFlags(flags()|Qt::ItemIsEditable);
-    connect(parent,SIGNAL(itemChanged(QTreeWidgetItem*,int)),SLOT(nameChanged()));
     lockCount=0;
     parentWidget=parent;
+    body=0;
+    setIcon(0,QIcon(":/images/algorithm/function.png"));
+    editable=true;
 }
 
 void FuncListItem::setFunctionName(QString name)
 {
     functionName=name;
-    setText(functionName+"("+arguments.join(",")+")");
+    update();
 }
 
 void FuncListItem::setHintText(QString text)
 {
     hintText=text;
-    lock();
     setToolTip(0,hintText);
-    unlock();
-    QRegExp exp("%([^%]+)%");
-    int pos=0;
-    arguments.clear();
-    while(-1!=(pos=exp.indexIn(hintText,pos+1)))
-    {
-        arguments<<exp.cap(1);
-        pos+=exp.matchedLength();
-    }
-    setText(functionName+"("+arguments.join(",")+")");
 }
 
 void FuncListItem::dlgEdit()
@@ -69,42 +59,42 @@ void FuncListItem::dlgEdit()
     }
 }
 
-void FuncListItem::nameChanged()
-{
-    if(isLocked())
-        return;
-    setFunctionName(text(0));
-}
-
 QString FuncListItem::getFunctionName()
 {
     return functionName;
 }
 
-void FuncListItem::edit()
+void FuncListItem::update()
 {
-    setText(functionName);
-    parentWidget->editItem(this);
+    setText(functionName+"("+arguments.join(",")+")");
 }
 
 void FuncListItem::setText(const QString &text)
 {
-    lock();
     QTreeWidgetItem::setText(0,text);
-    unlock();
 }
 
-void FuncListItem::lock()
+QTreeWidgetItem* FuncListItem::getBody() const
 {
-    lockCount=1;
+    return body;
 }
 
-void FuncListItem::unlock()
+void FuncListItem::setBody(QTreeWidgetItem *item)
 {
-    lockCount=0;
+    body=item;
 }
 
-bool FuncListItem::isLocked()
+QStringList& FuncListItem::args()
 {
-    return lockCount>0;
+    return arguments;
+}
+
+void FuncListItem::setEditable(bool e)
+{
+    editable=e;
+}
+
+bool FuncListItem::isEditable()
+{
+    return editable;
 }

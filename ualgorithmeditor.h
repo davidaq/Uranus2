@@ -20,13 +20,11 @@ public:
     ~UAlgorithmEditor();
     
 private slots:
-    void on_treeView_customContextMenuRequested(const QPoint &pos);
+    void on_body_customContextMenuRequested(const QPoint &pos);
 
     void on_functions_itemClicked(QTreeWidgetItem *item, int column);
 
     void on_functions_itemDoubleClicked(QTreeWidgetItem *item, int column);
-
-    void on_hintTextChanged();
 
 private:
     Ui::UAlgorithmEditor *ui;

@@ -13,21 +13,24 @@ public:
     void setHintText(QString);
     void dlgEdit();
     QString getFunctionName();
-    void edit();
+    void setEditable(bool);
+    bool isEditable();
     void setText(const QString& text);
+    void setBody(QTreeWidgetItem*);
+    QTreeWidgetItem* getBody() const;
+    QStringList& args();
+    void update();
 private:
+    bool editable;
     QString functionName,hintText;
     QStringList arguments;
     int lockCount;
     QTreeWidget* parentWidget;
-    void lock();
-    void unlock();
-    bool isLocked();
-    
+    QTreeWidgetItem* body;
+
 signals:
-    
+
 private slots:
-    void nameChanged();
 };
 
 #endif // FUNCLISTITEM_H
