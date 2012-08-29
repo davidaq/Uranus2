@@ -12,6 +12,7 @@ public:
     UAlgTag();
     ~UAlgTag();
     virtual QString tagName() const =0;
+    virtual void expanded(bool);
     bool isIndependent() const;
     void setIndependent(bool);
     void callMenu(QMenu&);
@@ -19,6 +20,7 @@ public:
     int index();
     void insertChild(int index, UAlgTag *child);
     void addChild(UAlgTag *child);
+    void setText(int column, const QString &text);
 public slots:
     void trigger();
 protected:

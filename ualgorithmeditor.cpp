@@ -17,8 +17,9 @@ UAlgorithmEditor::UAlgorithmEditor(QWidget *parent) :
 
     currentModule=ui->functions->topLevelItem(0);
     importedModule=ui->functions->topLevelItem(1);
-    ui->functions->topLevelItem(2)->setExpanded(true);
+    builtinModule=ui->functions->topLevelItem(2);
 
+    builtinModule->setExpanded(true);
     currentModule->setExpanded(true);
     importedModule->setExpanded(true);
 
@@ -71,19 +72,6 @@ void UAlgorithmEditor::on_body_customContextMenuRequested(const QPoint &pos)
     {
         tag->callMenu(menu);
     }else{
-        menu.addAction("   [Insert]")->setEnabled(false);
-        QMenu* sub=menu.addMenu("Flow control");
-        sub->addAction("Conditional branch");
-        sub->addAction("Conditional loop");
-        sub->addAction("Traverse");
-        menu.addAction("List");
-        menu.addAction("Return");
-        menu.addSeparator();
-        menu.addAction("Copy");
-        menu.addAction("Cut");
-        menu.addAction("Paste");
-        menu.addSeparator();
-        menu.addAction("Delete");
     }
     if(!menu.isEmpty())
         menu.show();
@@ -208,4 +196,70 @@ void UAlgorithmEditor::funcNameChanged(QString name)
 void UAlgorithmEditor::funcHintChanged(QString text)
 {
     currentFunction->setHintText(text);
+}
+
+void UAlgorithmEditor::on_body_itemExpanded(QTreeWidgetItem *item)
+{
+    UAlgTag* tag=dynamic_cast<UAlgTag*>(item);
+    if(tag)
+        tag->expanded(true);
+}
+
+void UAlgorithmEditor::on_body_itemCollapsed(QTreeWidgetItem *item)
+{
+    UAlgTag* tag=dynamic_cast<UAlgTag*>(item);
+    if(tag)
+        tag->expanded(false);
+}
+
+QList<UAlgorithmEditor::FunctionInfo> UAlgorithmEditor::getFunctions()
+{
+    QList<FunctionInfo> ret;
+    FunctionInfo info;
+    info.moduleName="/";
+    for(int i=0,c=currentModule->childCount();i<c;i++)
+    {
+        FuncListItem* item=dynamic_cast<FuncListItem*>(currentModule->child(i));
+        if(item)
+        {
+            info.hint=item->toolTip(0);
+            info.functionName=item->getFunctionName();
+            info.args=item->args();
+            ret<<info;
+        }
+    }
+    for(int i=0,c=importedModule->childCount();i<c;i++)
+    {
+        QTreeWidgetItem* mod=importedModule->child(i);
+        info.moduleName=mod->text(0);
+        for(int j=0,cc=mod->childCount();j<cc;j++)
+        {
+            FuncListItem* item=dynamic_cast<FuncListItem*>(mod->child(j));
+            if(item)
+            {
+                info.hint=item->toolTip(0);
+                info.functionName=item->getFunctionName();
+                info.args=item->args();
+                ret<<info;
+            }
+        }
+    }
+    for(int i=0,c=builtinModule->childCount();i<c;i++)
+    {
+        QTreeWidgetItem* mod=builtinModule->child(i);
+        info.moduleName=mod->text(0);
+        for(int j=0,cc=mod->childCount();j<cc;j++)
+        {
+            FuncListItem* item=dynamic_cast<FuncListItem*>(mod->child(j));
+            if(item)
+            {
+                info.hint=item->toolTip(0);
+                info.functionName=item->getFunctionName();
+                info.args=item->args();
+                ret<<info;
+            }
+        }
+    }
+
+    return ret;
 }

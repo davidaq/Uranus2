@@ -1,4 +1,5 @@
 #include "uarghook.h"
+#include "ulisttag.h"
 #include <QMenu>
 #include <QInputDialog>
 #include <QMessageBox>
@@ -23,24 +24,28 @@ void UArgHook::setTagName(QString name)
 void UArgHook::menu(QMenu &menu)
 {
     menu.setDefaultAction(
-        menu.addAction("Set value",this,SLOT(menuSetArgValue()))
+        menu.addAction("Set as value",this,SLOT(menuSetArgValue()))
         );
+    menu.addAction("Set as list",this,SLOT(menuSetArgList()));
     menu.addAction("Use variable",this,SLOT(menuSetArgVar()));
+    menu.addAction("Use function return value",this,SLOT(menuSetArgFunction()));
 }
 
 void UArgHook::setArgValue(QString value)
 {
     arg=value;
     setText(0,tag+": "+arg);
+    delete takeChild(0);
 }
 
-void UArgHook::menuSetArgValue()
+QString argProc(QString arg)
 {
-    bool ok;
     QString argS=arg;
     if(!argS.isEmpty())
     {
-        if(argS.left(11)=="<variable> ")
+        if(argS=="<function>"||argS=="<list>")
+            argS="";
+        else if(argS.left(11)=="<variable> ")
             argS=argS.mid(11);
         else{
             if(argS[0]=='"')
@@ -50,7 +55,13 @@ void UArgHook::menuSetArgValue()
             argS=argS.replace(QRegExp("\\\\([\"\\\\])"),"\\1");
         }
     }
-    QString input=QInputDialog::getText(0,"Set value","Set value for "+tag,QLineEdit::Normal,argS,&ok);
+    return argS;
+}
+
+void UArgHook::menuSetArgValue()
+{
+    bool ok;
+    QString input=QInputDialog::getText(0,"Set value","Set value for "+tag,QLineEdit::Normal,argProc(arg),&ok);
     if(ok)
     {
         if(input.isEmpty())
@@ -72,20 +83,7 @@ void UArgHook::menuSetArgValue()
 void UArgHook::menuSetArgVar()
 {
     bool ok;
-    QString argS=arg;
-    if(!argS.isEmpty())
-    {
-        if(argS.left(11)=="<variable> ")
-            argS=argS.mid(11);
-        else{
-            if(argS[0]=='"')
-                argS=argS.mid(1);
-            if(!argS.isEmpty()&&argS[argS.length()-1]=='"')
-                argS.chop(1);
-            argS=argS.replace(QRegExp("\\\\([\"\\\\])"),"\\1");
-        }
-    }
-    QString input=QInputDialog::getText(0,"Use variable","Use variable for "+tag,QLineEdit::Normal,argS,&ok);
+    QString input=QInputDialog::getText(0,"Use variable","Use variable for "+tag,QLineEdit::Normal,argProc(arg),&ok);
     if(ok)
     {
         if(input.isEmpty())
@@ -95,4 +93,24 @@ void UArgHook::menuSetArgVar()
         }
         setArgValue("<variable> "+input);
     }
+}
+
+QString UArgHook::value() const
+{
+    return arg;
+}
+
+void UArgHook::menuSetArgFunction()
+{
+    setArgValue("<function>");
+    UCallTag* item=new UCallTag;
+    item->setIndependent(false);
+    addChild(item);
+}
+
+void UArgHook::menuSetArgList()
+{
+    setArgValue("<list>");
+    UListTag* item=new UListTag;
+    addChild(item);
 }

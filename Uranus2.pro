@@ -30,7 +30,10 @@ SOURCES += main.cpp\
     UAlgTags/ulooptag.cpp \
     UAlgTags/utraversetag.cpp \
     UAlgTags/uconditiontag.cpp \
-    UAlgTags/ubranchtag.cpp
+    UAlgTags/ubranchtag.cpp \
+    UAlgTags/ulisttag.cpp \
+    UAlgTags/ulisttagitem.cpp \
+    UAlgTags/ucalltagselectdlg.cpp
 
 HEADERS  += mainwindow.h \
     console.h \
@@ -50,12 +53,16 @@ HEADERS  += mainwindow.h \
     UAlgTags/ulooptag.h \
     UAlgTags/utraversetag.h \
     UAlgTags/uconditiontag.h \
-    UAlgTags/ubranchtag.h
+    UAlgTags/ubranchtag.h \
+    UAlgTags/ulisttag.h \
+    UAlgTags/ulisttagitem.h \
+    UAlgTags/ucalltagselectdlg.h
 
 FORMS    += mainwindow.ui \
     console.ui \
     configdlg.ui \
-    ualgorithmeditor.ui
+    ualgorithmeditor.ui \
+    UAlgTags/ucalltagselectdlg.ui
 
 RESOURCES += \
     res.qrc

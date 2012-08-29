@@ -32,7 +32,7 @@ void UContainerTag::menu(QMenu &menu)
     m->addAction("Loop",this,SLOT(addLoop()));
     m->addAction("Break loop",this,SLOT(addBreak()));
     m->addAction("Continue loop",this,SLOT(addContinue()));
-    m->addAction("Function call",this,SLOT(addBreak()));
+    m->addAction("Function call",this,SLOT(addFunction()));
     m->addAction("Variable assign",this,SLOT(addAssign()));
     m->addAction("Return",this,SLOT(addReturn()));
     m->addAction("Python command",this,SLOT(addExec()));
@@ -102,5 +102,11 @@ void UContainerTag::addTraverse()
 void UContainerTag::addCondition()
 {
     UConditionTag *item=new UConditionTag;
+    insertChild(0,item);
+}
+
+void UContainerTag::addFunction()
+{
+    UCallTag* item=new UCallTag;
     insertChild(0,item);
 }

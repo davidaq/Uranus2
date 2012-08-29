@@ -11,7 +11,7 @@ public:
     virtual QString tagName() const;
     virtual void menu(QMenu &);
 public slots:
-    //void selectFunction();
+    void selectFunction();
 private:
     QString modulePath;
     QString functionName;

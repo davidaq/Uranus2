@@ -50,6 +50,7 @@ void UAlgTag::callMenu(QMenu &menu)
     this->menu(menu);
     if(isIndependent())
     {
+        menu.addSeparator();
         QMenu *m=menu.addMenu("Insert after");
         m->addAction("Return",this,SLOT(insertReturn()));
         menu.addSeparator();
@@ -73,6 +74,8 @@ void UAlgTag::trigger()
     QAction* act=tempMenu.defaultAction();
     if(act)
         act->trigger();
+    else
+        setExpanded(!isExpanded());
 }
 
 void UAlgTag::insertChild(int index, UAlgTag *child)
@@ -85,6 +88,12 @@ void UAlgTag::addChild(UAlgTag *child)
 {
     QTreeWidgetItem::addChild(child);
     expandDelayed();
+}
+
+void UAlgTag::setText(int column, const QString &text)
+{
+    QTreeWidgetItem::setText(column,text);
+    setToolTip(column,text);
 }
 
 void UAlgTag::expandDelayed()
@@ -100,4 +109,9 @@ void UAlgTag::expandDelayedS()
 {
     setExpanded(true);
     aboutToExpand=false;
+}
+
+void UAlgTag::expanded(bool)
+{
+
 }

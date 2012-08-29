@@ -14,11 +14,14 @@ public:
     void setTagName(QString);
     void setArgValue(QString);
     void setArgFunction();
+    QString value() const;
 private:
     QString tag,arg;
 private slots:
     void menuSetArgValue();
     void menuSetArgVar();
+    void menuSetArgList();
+    void menuSetArgFunction();
 };
 
 #endif // UARGHOOK_H

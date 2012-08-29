@@ -24,6 +24,7 @@ private slots:
     void addLoop();
     void addTraverse();
     void addCondition();
+    void addFunction();
 };
 
 #endif // UCONTAINERTAG_H
