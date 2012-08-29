@@ -4,6 +4,7 @@
 #include <QTreeWidgetItem>
 #include <QObject>
 
+class UContainerTag;
 class FuncListItem : public QObject,public QTreeWidgetItem
 {
     Q_OBJECT
@@ -17,9 +18,9 @@ public:
     void setEditable(bool);
     bool isEditable();
     void setText(const QString& text);
-    void setBody(QTreeWidgetItem*);
+    void setBody(UContainerTag *);
     void createBody();
-    QTreeWidgetItem* getBody() const;
+    UContainerTag *getBody() const;
     QStringList& args();
     void update();
 private:
@@ -28,7 +29,7 @@ private:
     QStringList arguments;
     int lockCount;
     QTreeWidget* parentWidget;
-    QTreeWidgetItem* body;
+    UContainerTag* body;
 
 signals:
 

@@ -6,17 +6,7 @@
 UArgHook::UArgHook()
 {
     tag="arg";
-    independent=true;
-}
-
-void UArgHook::setIndependent(bool b)
-{
-    independent=b;
-}
-
-bool UArgHook::isIndependent()
-{
-    return independent;
+    setIndependent(false);
 }
 
 QString UArgHook::tagName() const
@@ -32,13 +22,10 @@ void UArgHook::setTagName(QString name)
 
 void UArgHook::menu(QMenu &menu)
 {
-    menu.addAction("Set value",this,SLOT(menuSetArgValue()));
+    menu.setDefaultAction(
+        menu.addAction("Set value",this,SLOT(menuSetArgValue()))
+        );
     menu.addAction("Use variable",this,SLOT(menuSetArgVar()));
-    if(isIndependent())
-    {
-        menu.addSeparator();
-        menu.addAction("Delete",this,SLOT(deleteLater()));
-    }
 }
 
 void UArgHook::setArgValue(QString value)

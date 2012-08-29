@@ -20,9 +20,9 @@ private slots:
     void editName();
     void editArgs();
 signals:
-    void nameChanged();
-    void hintChanged();
-    void argsChanged();
+    void nameChanged(QString);
+    void hintChanged(QString);
+    void argsChanged(QStringList);
 };
 
 #endif // UFUNCTIONTAG_H

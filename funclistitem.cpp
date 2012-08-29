@@ -81,12 +81,12 @@ void FuncListItem::setText(const QString &text)
     QTreeWidgetItem::setText(0,text);
 }
 
-QTreeWidgetItem* FuncListItem::getBody() const
+UContainerTag* FuncListItem::getBody() const
 {
     return body;
 }
 
-void FuncListItem::setBody(QTreeWidgetItem *item)
+void FuncListItem::setBody(UContainerTag *item)
 {
     body=item;
 }
@@ -94,8 +94,8 @@ void FuncListItem::setBody(QTreeWidgetItem *item)
 void FuncListItem::createBody()
 {
     body=new UContainerTag;
-    body->setIcon(0,QIcon(":/images/algorithm/code.png"));
     body->setText(0,"Action");
+    body->setIndependent(false);
 }
 
 QStringList& FuncListItem::args()

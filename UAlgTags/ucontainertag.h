@@ -1,6 +1,8 @@
 #ifndef UCONTAINERTAG_H
 #define UCONTAINERTAG_H
+
 #include "ualgtag.h"
+
 class UContainerTag : public UAlgTag
 {
     Q_OBJECT
@@ -14,6 +16,14 @@ private:
 
 private slots:
     void addReturn();
+    void addComment();
+    void addBreak();
+    void addContinue();
+    void addAssign();
+    void addExec();
+    void addLoop();
+    void addTraverse();
+    void addCondition();
 };
 
 #endif // UCONTAINERTAG_H

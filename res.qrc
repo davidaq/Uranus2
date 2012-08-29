@@ -39,5 +39,10 @@
         <file>images/algorithm/switch.png</file>
         <file>images/algorithm/tag.png</file>
         <file>images/algorithm/return.png</file>
+        <file>images/algorithm/continue.png</file>
+        <file>images/algorithm/break.png</file>
+        <file>images/algorithm/lib.png</file>
+        <file>images/algorithm/condition.png</file>
+        <file>images/algorithm/items.png</file>
     </qresource>
 </RCC>

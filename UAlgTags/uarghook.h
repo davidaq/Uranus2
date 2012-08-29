@@ -14,11 +14,8 @@ public:
     void setTagName(QString);
     void setArgValue(QString);
     void setArgFunction();
-    void setIndependent(bool);
-    bool isIndependent();
 private:
     QString tag,arg;
-    bool independent;
 private slots:
     void menuSetArgValue();
     void menuSetArgVar();

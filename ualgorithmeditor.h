@@ -21,11 +21,12 @@ public:
     
 private slots:
     void on_body_customContextMenuRequested(const QPoint &pos);
-
     void on_functions_itemClicked(QTreeWidgetItem *item, int column);
-
     void on_functions_itemDoubleClicked(QTreeWidgetItem *item, int column);
-
+    void on_body_itemDoubleClicked(QTreeWidgetItem *item, int column);
+    void funcNameChanged(QString);
+    void funcArgsChanged(QStringList);
+    void funcHintChanged(QString);
 private:
     Ui::UAlgorithmEditor *ui;
     QTreeWidgetItem *currentModule,*importedModule,*currentBody;

@@ -6,11 +6,13 @@ UCommentTag::UCommentTag() :
     UAlgTag()
 {
     setIcon(0,QIcon(":/images/algorithm/tag.png"));
+    setIndependent(true);
 }
 
 void UCommentTag::setComment(QString comment)
 {
     setText(0,comment);
+    emit hintChanged(comment);
 }
 
 QString UCommentTag::comment()
@@ -20,7 +22,9 @@ QString UCommentTag::comment()
 
 void UCommentTag::menu(QMenu &menu)
 {
-    menu.addAction("Set comment",this,SLOT(edit()));
+    menu.setDefaultAction(
+        menu.addAction("Set comment",this,SLOT(edit()))
+        );
 }
 
 QString UCommentTag::tagName() const
@@ -30,7 +34,6 @@ QString UCommentTag::tagName() const
 
 void UCommentTag::edit()
 {
-
     bool ok;
     QString input=QInputDialog::getText(0,"Edit comment","Comment:",QLineEdit::Normal,comment(),&ok);
     if(ok)

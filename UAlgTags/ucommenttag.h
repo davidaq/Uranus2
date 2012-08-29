@@ -14,7 +14,7 @@ public:
     virtual QString tagName() const;
 private:
 signals:
-    
+    void hintChanged(QString);
 public slots:
     void edit();
 };

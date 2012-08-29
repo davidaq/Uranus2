@@ -6,7 +6,10 @@ UFunctionTag::UFunctionTag()
 {
     setIcon(0,QIcon(":/images/algorithm/function.png"));
     hintTag=new UCommentTag;
+    hintTag->setIndependent(false);
     hintTag->setIcon(0,QIcon(":/images/algorithm/tag.png"));
+    setIndependent(false);
+    connect(hintTag,SIGNAL(hintChanged(QString)),SIGNAL(hintChanged(QString)));
 }
 
 QString UFunctionTag::tagName() const
@@ -19,6 +22,7 @@ void UFunctionTag::setName(QString name)
     funcName=name;
     setText(0,name);
     setExpanded(true);
+    emit nameChanged(name);
 }
 
 void UFunctionTag::setHint(QString text)
@@ -35,19 +39,26 @@ void UFunctionTag::setArgs(const QStringList& list)
     }
 
     addChild(hintTag);
-    foreach(QString item,list)
+    QMutableStringListIterator iterator(*((QList<QString>*)&list));
+    while(iterator.hasNext())
     {
-        QTreeWidgetItem* child=new QTreeWidgetItem;
-        child->setIcon(0,QIcon(":/images/algorithm/var.png"));
-        child->setText(0,item);
+        QString item=iterator.next();
+        item=item.trimmed();
+        UStaticTag* child=new UStaticTag("arg");
+        child->setIcon(QIcon(":/images/algorithm/var.png"));
+        child->setText(item);
         addChild(child);
+        iterator.setValue(item);
     }
-    args=list.join(";");
+    args=list.join(",");
+    emit argsChanged(list);
 }
 
 void UFunctionTag::menu(QMenu& menu)
 {
-    menu.addAction(QIcon(":/images/algorithm/function.png"),"Edit function name",this,SLOT(editName()));
+    menu.setDefaultAction(
+        menu.addAction(QIcon(":/images/algorithm/function.png"),"Edit function name",this,SLOT(editName()))
+        );
     menu.addAction(QIcon(":/images/algorithm/tag.png"),"Edit function hint",hintTag,SLOT(edit()));
     menu.addAction(QIcon(":/images/algorithm/var.png"),"Edit arguments list",this,SLOT(editArgs()));
 }
@@ -65,9 +76,9 @@ void UFunctionTag::editName()
 void UFunctionTag::editArgs()
 {
     bool ok;
-    QString input=QInputDialog::getText(0,"Edit arguments list","Argument list: [Separate with ;]",QLineEdit::Normal,args,&ok);
+    QString input=QInputDialog::getText(0,"Edit arguments list","Argument list: [Separate with ,]",QLineEdit::Normal,args,&ok);
     if(ok)
     {
-        setArgs(input.split(';'));
+        setArgs(input.split(','));
     }
 }

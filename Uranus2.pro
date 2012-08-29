@@ -22,7 +22,15 @@ SOURCES += main.cpp\
     UAlgTags/ufunctiontag.cpp \
     UAlgTags/uarghook.cpp \
     UAlgTags/ucontainertag.cpp \
-    UAlgTags/ucommenttag.cpp
+    UAlgTags/ucommenttag.cpp \
+    UAlgTags/ustatictag.cpp \
+    UAlgTags/ualgtag.cpp \
+    UAlgTags/ucalltag.cpp \
+    UAlgTags/uassigntag.cpp \
+    UAlgTags/ulooptag.cpp \
+    UAlgTags/utraversetag.cpp \
+    UAlgTags/uconditiontag.cpp \
+    UAlgTags/ubranchtag.cpp
 
 HEADERS  += mainwindow.h \
     console.h \
@@ -35,7 +43,14 @@ HEADERS  += mainwindow.h \
     UAlgTags/ufunctiontag.h \
     UAlgTags/uarghook.h \
     UAlgTags/ucontainertag.h \
-    UAlgTags/ucommenttag.h
+    UAlgTags/ucommenttag.h \
+    UAlgTags/ustatictag.h \
+    UAlgTags/ucalltag.h \
+    UAlgTags/uassigntag.h \
+    UAlgTags/ulooptag.h \
+    UAlgTags/utraversetag.h \
+    UAlgTags/uconditiontag.h \
+    UAlgTags/ubranchtag.h
 
 FORMS    += mainwindow.ui \
     console.ui \

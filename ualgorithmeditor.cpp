@@ -23,6 +23,9 @@ UAlgorithmEditor::UAlgorithmEditor(QWidget *parent) :
     importedModule->setExpanded(true);
 
     UFunctionTag* funcTag=new UFunctionTag;
+    connect(funcTag,SIGNAL(nameChanged(QString)),SLOT(funcNameChanged(QString)));
+    connect(funcTag,SIGNAL(argsChanged(QStringList)),SLOT(funcArgsChanged(QStringList)));
+    connect(funcTag,SIGNAL(hintChanged(QString)),SLOT(funcHintChanged(QString)));
     ui->body->addTopLevelItem(funcTag);
 
     FuncListItem* item=new FuncListItem(ui->functions);
@@ -49,6 +52,7 @@ UAlgorithmEditor::UAlgorithmEditor(QWidget *parent) :
         }
     }
 
+
 }
 
 UAlgorithmEditor::~UAlgorithmEditor()
@@ -65,7 +69,7 @@ void UAlgorithmEditor::on_body_customContextMenuRequested(const QPoint &pos)
     menu.move(ui->body->mapToGlobal(pos));
     if(tag!=0)
     {
-        tag->menu(menu);
+        tag->callMenu(menu);
     }else{
         menu.addAction("   [Insert]")->setEnabled(false);
         QMenu* sub=menu.addMenu("Flow control");
@@ -85,6 +89,12 @@ void UAlgorithmEditor::on_body_customContextMenuRequested(const QPoint &pos)
         menu.show();
 }
 
+void UAlgorithmEditor::on_body_itemDoubleClicked(QTreeWidgetItem *item, int)
+{
+    UAlgTag* tag=dynamic_cast<UAlgTag*>(item);
+    tag->trigger();
+}
+
 void UAlgorithmEditor::on_functions_itemClicked(QTreeWidgetItem *rawitem, int )
 {
     FuncListItem* item=dynamic_cast<FuncListItem*>(rawitem);
@@ -101,7 +111,6 @@ void UAlgorithmEditor::on_functions_itemClicked(QTreeWidgetItem *rawitem, int )
     if(item->getBody())
     {
         ui->body->addTopLevelItem(item->getBody());
-        item->getBody()->setExpanded(true);
     }
     updateTitle();
     ui->body->setEnabled(item->isEditable());
@@ -113,6 +122,7 @@ void UAlgorithmEditor::on_functions_itemClicked(QTreeWidgetItem *rawitem, int )
         funcTag->setHint(item->toolTip(0));
         funcTag->setArgs(item->args());
     }
+    ui->body->expandAll();
 }
 
 void UAlgorithmEditor::updateTitle()
@@ -138,7 +148,7 @@ void UAlgorithmEditor::import(QString path,bool)
         QFileInfo finfo(file);
         QTreeWidgetItem *modu=new QTreeWidgetItem;
         modu->setText(0,finfo.baseName());
-        modu->setIcon(0,QIcon(":/images/algorithm/command.png"));
+        modu->setIcon(0,QIcon(":/images/algorithm/lib.png"));
         ui->functions->topLevelItem(2)->addChild(modu);
 
         QRegExp keyWord("(\\s*)(\\w+) ",Qt::CaseInsensitive);
@@ -181,4 +191,21 @@ void UAlgorithmEditor::import(QString path,bool)
             }
         }
     }
+}
+
+void UAlgorithmEditor::funcArgsChanged(QStringList list)
+{
+    QStringList &args=currentFunction->args();
+    args=list;
+    currentFunction->update();
+}
+
+void UAlgorithmEditor::funcNameChanged(QString name)
+{
+    currentFunction->setFunctionName(name);
+}
+
+void UAlgorithmEditor::funcHintChanged(QString text)
+{
+    currentFunction->setHintText(text);
 }
