@@ -7,7 +7,7 @@ UTraverseTag::UTraverseTag()
     setIcon(0,QIcon(":/images/algorithm/loop.png"));
     condition=new UArgHook;
     condition->setIndependent(false);
-    condition->setTagName("list");
+    condition->setTagName("Traversed list");
     condition->setIcon(0,QIcon(":/images/algorithm/items.png"));
     addChild(condition);
     action=new UContainerTag;

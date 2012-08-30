@@ -10,11 +10,13 @@ public:
     explicit UCallTag();
     virtual QString tagName() const;
     virtual void menu(QMenu &);
+    bool setFunction(const QString &,const QString &);
+    void setArgs(QStringList);
 public slots:
     void selectFunction();
 private:
-    QString modulePath;
-    QString functionName;
+    QString moduleName,functionName;
+    QStringList args;
 signals:
     
 private slots:

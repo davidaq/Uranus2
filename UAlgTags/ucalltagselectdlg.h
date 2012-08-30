@@ -16,11 +16,11 @@ public:
     explicit UCallTagSelectDlg(QWidget *parent = 0);
     ~UCallTagSelectDlg();
     void setFunctions(const QList<UAlgorithmEditor::FunctionInfo>&);
-    
+    QString selectionFunction,selectionModule;
 private slots:
-    void on_moduleSel_currentIndexChanged(const QString &arg1);
-
-    void on_functionSel_currentIndexChanged(int index);
+    void on_moduleSel_currentIndexChanged(const QString &);
+    void functionSel_currentIndexChanged(int index);
+    void init();
 
 private:
     QList<UAlgorithmEditor::FunctionInfo> funcs;

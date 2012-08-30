@@ -216,15 +216,24 @@ QList<UAlgorithmEditor::FunctionInfo> UAlgorithmEditor::getFunctions()
 {
     QList<FunctionInfo> ret;
     FunctionInfo info;
-    info.moduleName="/";
+    info.moduleName=":/";
     for(int i=0,c=currentModule->childCount();i<c;i++)
     {
         FuncListItem* item=dynamic_cast<FuncListItem*>(currentModule->child(i));
         if(item)
         {
-            info.hint=item->toolTip(0);
             info.functionName=item->getFunctionName();
             info.args=item->args();
+            QString hint;
+            hint="<i>"+info.moduleName+"</i> - <b>"+info.functionName+"</b><p>";
+            hint+=item->toolTip(0)+"<br/>";
+            hint+="<i>Arguments:</i>";
+            foreach(QString arg,info.args)
+            {
+                hint+="<br/>  * "+arg;
+            }
+            hint+="</p>";
+            info.hint=hint;
             ret<<info;
         }
     }
@@ -237,9 +246,18 @@ QList<UAlgorithmEditor::FunctionInfo> UAlgorithmEditor::getFunctions()
             FuncListItem* item=dynamic_cast<FuncListItem*>(mod->child(j));
             if(item)
             {
-                info.hint=item->toolTip(0);
                 info.functionName=item->getFunctionName();
                 info.args=item->args();
+                QString hint;
+                hint="<i>"+info.moduleName+"</i> - <b>"+info.functionName+"</b><p>";
+                hint+=item->toolTip(0)+"<br/>";
+                hint+="<i>Arguments:</i>";
+                foreach(QString arg,info.args)
+                {
+                    hint+="<br/>  * "+arg;
+                }
+                hint+="</p>";
+                info.hint=hint;
                 ret<<info;
             }
         }
@@ -253,9 +271,18 @@ QList<UAlgorithmEditor::FunctionInfo> UAlgorithmEditor::getFunctions()
             FuncListItem* item=dynamic_cast<FuncListItem*>(mod->child(j));
             if(item)
             {
-                info.hint=item->toolTip(0);
                 info.functionName=item->getFunctionName();
                 info.args=item->args();
+                QString hint;
+                hint="<i>"+info.moduleName+"</i> - <b>"+info.functionName+"</b><p>";
+                hint+=item->toolTip(0)+"<br/>";
+                hint+="<i>Arguments:</i>";
+                foreach(QString arg,info.args)
+                {
+                    hint+="<br/>  * "+arg;
+                }
+                hint+="</p>";
+                info.hint=hint;
                 ret<<info;
             }
         }
