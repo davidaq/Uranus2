@@ -11,6 +11,8 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QLinkedList>
+#include <QMessageBox>
+
 
 UAlgorithmEditor::UAlgorithmEditor(QWidget *parent, MainWindow *base) :
     QWidget(parent),
@@ -139,22 +141,33 @@ void UAlgorithmEditor::on_functions_itemDoubleClicked(QTreeWidgetItem *rawitem, 
     }
 }
 
-void UAlgorithmEditor::import(QString path,bool)
+void UAlgorithmEditor::import(QString path,bool builtin)
 {
     QFile file(path);
     if(file.open(QFile::ReadOnly)){
+        if(!file.atEnd()){
+            QString line=QString::fromUtf8(file.readLine());
+            if(line!=FILE_HEAD){
+                QMessageBox::warning(this,"File format error",path+" is not a algorithm file of Uranus2");
+                return;
+            }
+        }
         QFileInfo finfo(file);
         QTreeWidgetItem *modu=new QTreeWidgetItem;
         modu->setText(0,finfo.baseName());
         modu->setIcon(0,QIcon(":/images/algorithm/lib.png"));
-        ui->functions->topLevelItem(2)->addChild(modu);
+        modu->setData(0,5,path);
+        if(builtin)
+            builtinModule->addChild(modu);
+        else
+            importedModule->addChild(modu);
 
         QRegExp keyWord("(\\s*)(\\w+)\\s",Qt::CaseInsensitive);
         FuncListItem* funcItem=0;
         int pIndent=0;
         while(!file.atEnd())
         {
-            QString line=file.readLine();
+            QString line=QString::fromUtf8(file.readLine());
             keyWord.indexIn(line);
             QString key=keyWord.cap(2).toLower();
             line=line.mid(keyWord.cap().length()).trimmed();
@@ -311,6 +324,7 @@ void UAlgorithmEditor::on_functions_customContextMenuRequested(const QPoint &pos
     if(item!=0){
         menu.addAction("Delete function",item,SLOT(deleteLater()))->setEnabled(currentFunction!=item);
     }
+    menu.addAction("Import module",this,SLOT(importModule()));
     menu.move(ui->functions->mapToGlobal(pos));
     menu.show();
 }
@@ -342,7 +356,11 @@ bool UAlgorithmEditor::save(){
     QFile fp(path);
     if(fp.open(QFile::WriteOnly)){
         name = QFileInfo(path).fileName();
-
+        writeLine(fp,FILE_HEAD);
+        for(int i=0,c=importedModule->childCount();i<c;i++){
+            QString importPath = importedModule->child(i)->data(0,5).toString();
+            writeLine(fp,"import "+importPath);
+        }
         for(int i=0,c=currentModule->childCount();i<c;i++){
             FuncListItem * function = dynamic_cast<FuncListItem*>(currentModule->child(i));
             if(function==0)
@@ -357,6 +375,7 @@ bool UAlgorithmEditor::save(){
 
         edited = false;
         updateTitle();
+        fp.close();
     }
     return true;
 }
@@ -383,8 +402,15 @@ void UAlgorithmEditor::open(QString path){
     foreach(QTreeWidgetItem* item,currentModule->takeChildren()){
         delete item;
     }
+    if(!fp.atEnd()){
+        QString line=QString::fromUtf8(fp.readLine()).trimmed();
+        if(line!=FILE_HEAD){
+            QMessageBox::warning(this,"File format error","The specified file is not a algorithm file of Uranus2");
+            return;
+        }
+    }
     while(!fp.atEnd()){
-        QString line=fp.readLine();
+        QString line=QString::fromUtf8(fp.readLine());
         keyWord.indexIn(line);
         QString key=keyWord.cap(2).toLower();
         line=line.mid(keyWord.cap().length()).trimmed();
@@ -402,7 +428,9 @@ void UAlgorithmEditor::open(QString path){
                     stack.pop_back();
             }
         }
-        if(key=="function"){
+        if(key=="import"){
+            import(line);
+        }else if(key=="function"){
             function=new FuncListItem(ui->functions);
             function->setFunctionName(line);
             function->setEditable(true);
@@ -568,13 +596,13 @@ void UAlgorithmEditor::fixSelection()
     if(fixSelectionDelayActive)
         return;
     QList<QTreeWidgetItem*> list = ui->body->selectedItems();
-    if(list.isEmpty())
+    if(list.size()<2){
         return;
+    }
     fixSelectionDelay.stop();
     fixSelectionDelayActive = true;
     int depth = 0x7ffffff;
     foreach(QTreeWidgetItem* item,list){
-        qDebug()<<"loop1";
         UAlgTag* tag = dynamic_cast<UAlgTag*>(item);
         if(tag!=0){
             if(tag->getDepth()<depth)
@@ -584,11 +612,9 @@ void UAlgorithmEditor::fixSelection()
     QSet<UAlgTag*> selected;
     QLinkedList<UAlgTag*> queue;
     foreach(QTreeWidgetItem* item,list){
-        qDebug()<<"loop2";
         UAlgTag* tag = dynamic_cast<UAlgTag*>(item);
         if(tag!=0&&!selected.contains(tag)){
             while(tag->getDepth()!=depth){
-                qDebug()<<"loop3";
                 tag=dynamic_cast<UAlgTag*>(tag->QTreeWidgetItem::parent());
                 if(tag==0)
                     break;
@@ -597,7 +623,6 @@ void UAlgorithmEditor::fixSelection()
                 continue;
             queue.push_back(tag);
             while(!queue.isEmpty()){
-                qDebug()<<"loop4";
                 UAlgTag* ctag = queue.first();
                 queue.pop_front();
                 selected.insert(ctag);
@@ -613,7 +638,6 @@ void UAlgorithmEditor::fixSelection()
     foreach(UAlgTag* item,selected){
         item->setSelected(true);
     }
-    qDebug()<<"sel!!";
     fixSelectionDelayActive = false;
 }
 
@@ -622,4 +646,12 @@ void UAlgorithmEditor::on_body_itemSelectionChanged()
     fixSelectionDelay.stop();
     if(!fixSelectionDelayActive)
         fixSelectionDelay.start();
+}
+
+void UAlgorithmEditor::importModule()
+{
+    QString path = QFileDialog::getOpenFileName(this,"Select a module to import");
+    if(!path.isEmpty()){
+        import(path);
+    }
 }

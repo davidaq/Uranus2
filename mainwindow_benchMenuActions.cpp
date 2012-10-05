@@ -1,8 +1,19 @@
 #include "mainwindow.h"
 #include "console.h"
+#include "ualgorithmeditor.h"
 #include <QMessageBox>
 #include <QMenu>
 #include <QDebug>
+
+void MainWindow::on_fileView_doubleClicked(const QModelIndex &index)
+{
+    fileView()->setCurrentIndex(index);
+    if(index.isValid())
+    {
+        benchMenuTarget = index;
+        benchMenu_open();
+    }
+}
 
 void MainWindow::on_fileView_customContextMenuRequested(const QPoint &pos)
 {
@@ -25,6 +36,7 @@ void MainWindow::on_fileView_customContextMenuRequested(const QPoint &pos)
             menu.addAction( "Set as base directory",this,SLOT(benchMenu_setbase()) );
         }else
         {
+            menu.setDefaultAction(menu.addAction( "Open as algorithm",this,SLOT(benchMenu_open()) ));
             menu.addAction( "Run in console",this,SLOT(benchMenu_runInConsole()) );
         }
         menu.addSeparator();
@@ -107,6 +119,19 @@ void MainWindow::benchMenu_delete()
         QMessageBox::Yes|QMessageBox::No))
     {
         benchModel->remove(benchMenuTarget);
+    }
+}
+
+void MainWindow::benchMenu_open()
+{
+    QString path=benchModel->filePath(benchMenuTarget);
+    QFile fp(path);
+    if(fp.open(QFile::ReadOnly)){
+        QString head = QString::fromUtf8(fp.readLine()).trimmed();
+        fp.close();
+        if(head==FILE_HEAD){
+            on_actionOpen_triggered(path);
+        }
     }
 }
 

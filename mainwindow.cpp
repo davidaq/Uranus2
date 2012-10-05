@@ -3,7 +3,6 @@
 #include "ualgorithmeditor.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
-#include <QDebug>
 #include <QDir>
 #include <QTimer>
 #include <QMdiSubWindow>
@@ -75,6 +74,7 @@ void MainWindow::cwdChanged(QString path)
             history.pop_front();
     }
     benchCurrentPath=path;
+    QDir::setCurrent(path);
 }
 
 void MainWindow::on_setCwdBtn_clicked()
@@ -210,9 +210,10 @@ QString MainWindow::getCwd()
     return benchCurrentPath;
 }
 
-void MainWindow::on_actionOpen_triggered()
+void MainWindow::on_actionOpen_triggered(QString path)
 {
-    QString path = QFileDialog::getOpenFileName(this,"Open a file");
+    if(path.isEmpty())
+        path = QFileDialog::getOpenFileName(this,"Open a file");
     if(path.isEmpty())
         return;
     if(QFileInfo(path).suffix()=="urw"){

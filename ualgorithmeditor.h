@@ -10,6 +10,8 @@ namespace Ui {
 class UAlgorithmEditor;
 }
 
+#define FILE_HEAD "be25a38b316d72acf2e6b5da9169d0df"
+
 class QTreeWidgetItem;
 class FuncListItem;
 class UAlgorithmEditor : public QWidget,public UDocument
@@ -48,6 +50,7 @@ private slots:
     void on_functions_customContextMenuRequested(const QPoint &pos);
     void addFunction();
     void fixSelection();
+    void importModule();
 
     void on_body_itemSelectionChanged();
 

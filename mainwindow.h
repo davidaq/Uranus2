@@ -44,6 +44,7 @@ private slots:
     void benchMenu_delete();
     void benchMenu_runInConsole();
     void benchMenu_setbase();
+    void benchMenu_open();
     void on_actionConfiguration_triggered();
     void on_benchToolUp_clicked();
     void on_benchToolVisible_clicked(bool);
@@ -55,7 +56,8 @@ private slots:
     void on_actionTiled_Display_triggered();
     void on_actionSave_triggered();
     void on_actionSave_All_triggered();
-    void on_actionOpen_triggered();
+    void on_actionOpen_triggered(QString path="");
+    void on_fileView_doubleClicked(const QModelIndex &index);
 };
 
 #endif // MAINWINDOW_H
