@@ -146,7 +146,7 @@ void UAlgorithmEditor::import(QString path,bool builtin)
     QFile file(path);
     if(file.open(QFile::ReadOnly)){
         if(!file.atEnd()){
-            QString line=QString::fromUtf8(file.readLine());
+            QString line=QString::fromUtf8(file.readLine()).trimmed();
             if(line!=FILE_HEAD){
                 QMessageBox::warning(this,"File format error",path+" is not a algorithm file of Uranus2");
                 return;
@@ -355,11 +355,13 @@ bool UAlgorithmEditor::save(){
     }
     QFile fp(path);
     if(fp.open(QFile::WriteOnly)){
-        name = QFileInfo(path).fileName();
+        QFileInfo finfo(fp);
+        name = finfo.fileName();
+        QDir cDir(finfo.absoluteDir());
         writeLine(fp,FILE_HEAD);
         for(int i=0,c=importedModule->childCount();i<c;i++){
             QString importPath = importedModule->child(i)->data(0,5).toString();
-            writeLine(fp,"import "+importPath);
+            writeLine(fp,"import "+cDir.relativeFilePath(importPath));
         }
         for(int i=0,c=currentModule->childCount();i<c;i++){
             FuncListItem * function = dynamic_cast<FuncListItem*>(currentModule->child(i));
@@ -393,8 +395,6 @@ void UAlgorithmEditor::open(QString path){
     QFile fp(path);
     if(!fp.open(QFile::ReadOnly))
         return;
-    this->path = path;
-    name = QFileInfo(path).fileName();
     QLinkedList<UAlgTag*> stack;
     QRegExp keyWord("(\\s*)(\\w+)\\s",Qt::CaseInsensitive);
     FuncListItem * function=0,*first=0;
@@ -409,6 +409,11 @@ void UAlgorithmEditor::open(QString path){
             return;
         }
     }
+    this->path = path;
+    QFileInfo finfo(fp);
+    name = finfo.fileName();
+    QString tempCP = QDir::currentPath();
+    QDir::setCurrent(finfo.absolutePath());
     while(!fp.atEnd()){
         QString line=QString::fromUtf8(fp.readLine());
         keyWord.indexIn(line);
@@ -583,6 +588,7 @@ void UAlgorithmEditor::open(QString path){
             }
         }
     }
+    QDir::setCurrent(tempCP);
     if(function!=0){
         function->update();
         on_functions_itemClicked(first,0);
