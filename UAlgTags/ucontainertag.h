@@ -11,6 +11,7 @@ public:
     virtual QString tagName() const;
     virtual void menu(QMenu&);
     void setTagName(QString);
+    virtual void save(QFile &fp,int depth=0) const;
 private:
     QString tag;
 

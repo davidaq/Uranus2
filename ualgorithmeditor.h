@@ -2,6 +2,7 @@
 #define UALGORITHMEDITOR_H
 
 #include "udocument.h"
+#include "mainwindow.h"
 #include <QWidget>
 #include <QModelIndex>
 
@@ -16,7 +17,7 @@ class UAlgorithmEditor : public QWidget,public UDocument
     Q_OBJECT
     
 public:
-    explicit UAlgorithmEditor(QWidget *parent = 0);
+    explicit UAlgorithmEditor(QWidget *parent = 0,MainWindow* base = 0);
     ~UAlgorithmEditor();
 
     struct FunctionInfo{
@@ -27,7 +28,13 @@ public:
     };
 
     QList<FunctionInfo> getFunctions();
-    
+    virtual bool save();
+    virtual bool modified();
+    void open(QString);
+//    virtual bool execute();
+//    virtual bool executable();
+public slots:
+    void editedS();
 private slots:
     void on_body_customContextMenuRequested(const QPoint &pos);
     void on_functions_itemClicked(QTreeWidgetItem *item, int column);
@@ -38,14 +45,23 @@ private slots:
     void funcNameChanged(QString);
     void funcArgsChanged(QStringList);
     void funcHintChanged(QString);
+    void on_functions_customContextMenuRequested(const QPoint &pos);
+    void addFunction();
+    void fixSelection();
+
+    void on_body_itemSelectionChanged();
+
 private:
+    MainWindow* base;
     Ui::UAlgorithmEditor *ui;
     QTreeWidgetItem *builtinModule,*currentModule,*importedModule,*currentBody;
     FuncListItem* currentFunction;
     bool edited;
-    QString name;
+    QString name,path;
     void updateTitle();
     void import(QString,bool builtin=false);
+    QTimer fixSelectionDelay;
+    bool fixSelectionDelayActive;
 };
 
 #endif // UALGORITHMEDITOR_H

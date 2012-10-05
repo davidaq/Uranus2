@@ -12,6 +12,7 @@ public:
     virtual void menu(QMenu &);
     bool setFunction(const QString &,const QString &);
     void setArgs(QStringList);
+    void save(QFile &fp, int depth) const;
 public slots:
     void selectFunction();
 private:

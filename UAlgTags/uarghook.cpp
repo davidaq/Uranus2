@@ -114,3 +114,9 @@ void UArgHook::menuSetArgList()
     UListTag* item=new UListTag;
     addChild(item);
 }
+
+void UArgHook::save(QFile &fp, int depth) const
+{
+    writeLine(fp,tagName()+" "+value(),depth);
+    UAlgTag::save(fp,depth);
+}

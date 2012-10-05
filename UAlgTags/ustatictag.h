@@ -12,6 +12,7 @@ public:
     virtual QString tagName() const;
     void setText(const QString&);
     void setIcon(const QIcon&);
+    void save(QFile &fp, int depth) const;
 private:
     QString tag;
 };

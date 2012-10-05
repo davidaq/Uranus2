@@ -42,3 +42,9 @@ void UAssignTag::setVarname(QString var)
     varname=var;
     setText(0,"Assign "+var+":");
 }
+
+void UAssignTag::save(QFile &fp, int depth) const
+{
+    writeLine(fp,"assign "+varname,depth);
+    UAlgTag::save(fp,depth);
+}

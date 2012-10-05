@@ -83,3 +83,9 @@ void UCallTag::setArgs(QStringList list)
     if(!list.isEmpty())
         setText(0,text(0)+" with arguments:");
 }
+
+void UCallTag::save(QFile &fp, int depth) const
+{
+    writeLine(fp,"call "+moduleName+"/"+functionName,depth);
+    UAlgTag::save(fp,depth);
+}

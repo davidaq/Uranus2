@@ -10,6 +10,7 @@ public:
     UListTag();
     virtual QString tagName() const;
     virtual void expanded(bool);
+    void save(QFile &fp, int depth) const;
 protected:
     virtual void menu(QMenu &);
 private slots:

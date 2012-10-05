@@ -33,6 +33,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->benchToolBack->setEnabled(false);
     ui->benchToolNext->setEnabled(false);
+
+    tick.setInterval(500);
+    tick.start();
+    connect(&tick,SIGNAL(timeout()),SLOT(updateTools()));
 }
 
 MainWindow::~MainWindow()
@@ -145,7 +149,7 @@ void MainWindow::on_benchToolNext_clicked()
 
 void MainWindow::on_actionNew_Algorithm_triggered()
 {
-    UAlgorithmEditor* editor=new UAlgorithmEditor;
+    UAlgorithmEditor* editor=new UAlgorithmEditor(this,this);
     QMdiSubWindow* sub=ui->mdiArea->addSubWindow(editor);
     sub->showMaximized();
 }
@@ -158,4 +162,65 @@ void MainWindow::on_actionCasacaded_Display_triggered()
 void MainWindow::on_actionTiled_Display_triggered()
 {
     ui->mdiArea->tileSubWindows();
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    QMdiSubWindow *sub = ui->mdiArea->currentSubWindow();
+    UDocument* doc = dynamic_cast<UDocument*>(sub->widget());
+    if(doc!=0){
+        if(doc->modified())
+            doc->save();
+    }
+}
+
+void MainWindow::on_actionSave_All_triggered()
+{
+    foreach(QMdiSubWindow *sub,ui->mdiArea->subWindowList()){
+        UDocument* doc = dynamic_cast<UDocument*>(sub->widget());
+        if(doc!=0){
+            if(doc->modified())
+                doc->save();
+        }
+    }
+}
+
+void MainWindow::updateTools()
+{
+    bool hasModified = false,curModified = false;
+    foreach(QMdiSubWindow *sub,ui->mdiArea->subWindowList()){
+        UDocument* doc = dynamic_cast<UDocument*>(sub->widget());
+        if(doc!=0){
+            if(doc->modified()){
+                hasModified = true;
+                if(sub==ui->mdiArea->currentSubWindow())
+                {
+                    curModified = true;
+                    break;
+                }
+            }
+        }
+    }
+    ui->actionSave_All->setEnabled(hasModified);
+    ui->actionSave->setEnabled(curModified);
+}
+
+QString MainWindow::getCwd()
+{
+    return benchCurrentPath;
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    QString path = QFileDialog::getOpenFileName(this,"Open a file");
+    if(path.isEmpty())
+        return;
+    if(QFileInfo(path).suffix()=="urw"){
+
+    }else{
+        on_actionNew_Algorithm_triggered();
+        UAlgorithmEditor* editor = dynamic_cast<UAlgorithmEditor*>(ui->mdiArea->currentSubWindow()->widget());
+        if(editor!=0)
+            editor->open(path);
+    }
 }

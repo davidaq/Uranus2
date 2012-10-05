@@ -67,6 +67,7 @@ void UFunctionTag::editName()
 {
     bool ok;
     QString input=QInputDialog::getText(0,"Edit function name","Name:",QLineEdit::Normal,funcName,&ok);
+    input = input.replace("/","_");
     if(ok&&!input.isEmpty())
     {
         setName(input);

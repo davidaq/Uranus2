@@ -21,18 +21,21 @@ public:
     ~MainWindow();
     Console* console();
     QTreeView* fileView();
+    QString getCwd();
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *benchModel;
     QModelIndex benchMenuTarget;
     QList<QString> history,historyBack;
     QString benchCurrentPath;
+    QTimer tick;
 
 private slots:
     void cwdChanged(QString);
     void on_setCwdBtn_clicked();
     void on_fileView_customContextMenuRequested(const QPoint &pos);
     void on_benchFileFilter_textChanged(const QString &arg1);
+    void updateTools();
 
     // bench menu actions
     void benchMenu_mkdir();
@@ -50,6 +53,9 @@ private slots:
     void on_actionNew_Algorithm_triggered();
     void on_actionCasacaded_Display_triggered();
     void on_actionTiled_Display_triggered();
+    void on_actionSave_triggered();
+    void on_actionSave_All_triggered();
+    void on_actionOpen_triggered();
 };
 
 #endif // MAINWINDOW_H

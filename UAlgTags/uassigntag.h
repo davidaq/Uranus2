@@ -11,6 +11,7 @@ public:
     virtual void menu(QMenu &);
     virtual QString tagName() const;
     void setVarname(QString);
+    void save(QFile &fp, int depth) const;
 private slots:
     void menuSetVarname();
 private:

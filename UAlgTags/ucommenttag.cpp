@@ -15,7 +15,7 @@ void UCommentTag::setComment(QString comment)
     emit hintChanged(comment);
 }
 
-QString UCommentTag::comment()
+QString UCommentTag::comment() const
 {
     return text(0);
 }
@@ -40,4 +40,9 @@ void UCommentTag::edit()
     {
         setComment(input);
     }
+}
+
+void UCommentTag::save(QFile &fp, int depth) const
+{
+    writeLine(fp,"hint "+comment(),depth);
 }

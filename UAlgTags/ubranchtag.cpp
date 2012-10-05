@@ -1,21 +1,23 @@
 #include "ubranchtag.h"
 #include <QMenu>
 
-UBranchTag::UBranchTag()
+UBranchTag::UBranchTag(bool empty)
 {
     setIndependent(false);
     setText(0,"Branch");
     setIcon(0,QIcon(":/images/algorithm/branch.png"));
-    condition=new UArgHook;
-    condition->setIndependent(false);
-    condition->setTagName("condition");
-    condition->setIcon(0,QIcon(":/images/algorithm/condition.png"));
-    condition->setArgValue("1");
-    addChild(condition);
-    action=new UContainerTag;
-    action->setIndependent(false);
-    action->setText(0,"action");
-    addChild(action);
+    if(!empty){
+        condition=new UArgHook;
+        condition->setIndependent(false);
+        condition->setTagName("condition");
+        condition->setIcon(0,QIcon(":/images/algorithm/condition.png"));
+        condition->setArgValue("1");
+        addChild(condition);
+        action=new UContainerTag;
+        action->setIndependent(false);
+        action->setText(0,"action");
+        addChild(action);
+    }
 }
 
 void UBranchTag::menu(QMenu &menu)
@@ -35,4 +37,10 @@ void UBranchTag::insertBranch()
     UAlgTag* p=dynamic_cast<UAlgTag*>(QTreeWidgetItem::parent());
     if(p)
         p->insertChild(index(),new UBranchTag);
+}
+
+void UBranchTag::save(QFile &fp, int depth) const
+{
+    writeLine(fp,"branch",depth);
+    UAlgTag::save(fp,depth);
 }

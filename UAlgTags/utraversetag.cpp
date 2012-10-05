@@ -1,10 +1,12 @@
 #include "utraversetag.h"
 
-UTraverseTag::UTraverseTag()
+UTraverseTag::UTraverseTag(bool empty)
 {
     setIndependent(true);
     setText(0,"Loop");
     setIcon(0,QIcon(":/images/algorithm/loop.png"));
+    if(empty)
+        return;
     condition=new UArgHook;
     condition->setIndependent(false);
     condition->setTagName("Traversed list");
@@ -24,4 +26,10 @@ QString UTraverseTag::tagName() const
 void UTraverseTag::menu(QMenu &)
 {
 
+}
+
+void UTraverseTag::save(QFile &fp, int depth) const
+{
+    writeLine(fp,"traverse",depth);
+    UAlgTag::save(fp,depth);
 }

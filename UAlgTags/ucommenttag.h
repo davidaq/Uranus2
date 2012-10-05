@@ -9,9 +9,10 @@ class UCommentTag : public UAlgTag
 public:
     explicit UCommentTag();
     void setComment(QString);
-    QString comment();
+    QString comment() const;
     virtual void menu(QMenu &);
     virtual QString tagName() const;
+    void save(QFile &fp, int depth) const;
 private:
 signals:
     void hintChanged(QString);

@@ -6,8 +6,9 @@ class UTraverseTag : public UAlgTag
 {
     Q_OBJECT
 public:
-    UTraverseTag();
+    UTraverseTag(bool empty=false);
     virtual QString tagName() const;
+    void save(QFile &fp, int depth) const;
 protected:
     virtual void menu(QMenu &);
 private:

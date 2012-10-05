@@ -6,6 +6,7 @@ UContainerTag::UContainerTag()
     tag="do";
     setIndependent(true);
     setIcon(0,QIcon(":/images/algorithm/code.png"));
+    setText(0,"action");
 }
 
 QString UContainerTag::tagName() const
@@ -109,4 +110,10 @@ void UContainerTag::addFunction()
 {
     UCallTag* item=new UCallTag;
     insertChild(0,item);
+}
+
+void UContainerTag::save(QFile &fp, int depth) const
+{
+    writeLine(fp,"do",depth);
+    UAlgTag::save(fp,depth);
 }

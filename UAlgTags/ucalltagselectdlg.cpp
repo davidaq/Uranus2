@@ -37,6 +37,7 @@ void UCallTagSelectDlg::init()
         }
     }
     ui->moduleSel->setCurrentIndex(0);
+    functionSel_currentIndexChanged(0);
 }
 #include <QDebug>
 void UCallTagSelectDlg::on_moduleSel_currentIndexChanged(const QString &ritem)

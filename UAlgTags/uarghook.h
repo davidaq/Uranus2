@@ -15,6 +15,7 @@ public:
     void setArgValue(QString);
     void setArgFunction();
     QString value() const;
+    virtual void save(QFile &fp,int depth=0) const;
 private:
     QString tag,arg;
 private slots:

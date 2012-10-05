@@ -55,3 +55,9 @@ void UListTag::expanded(bool exp)
         setText(0,"[ "+list.join(" , ")+" ]");
     }
 }
+
+void UListTag::save(QFile &fp, int depth) const
+{
+    writeLine(fp,"list",depth);
+    UAlgTag::save(fp,depth);
+}

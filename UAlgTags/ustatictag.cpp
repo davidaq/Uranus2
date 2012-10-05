@@ -25,3 +25,9 @@ QString UStaticTag::tagName() const
 {
     return tag;
 }
+
+void UStaticTag::save(QFile &fp, int depth) const
+{
+    writeLine(fp,tag,depth);
+    UAlgTag::save(fp,depth);
+}
