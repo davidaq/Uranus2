@@ -6,7 +6,6 @@
 #include "UAlgTags/ulisttag.h"
 #include "UAlgTags/ulisttagitem.h"
 #include "cfg.h"
-#include <QDebug>
 #include <QMenu>
 #include <QDir>
 #include <QFileDialog>
@@ -452,6 +451,7 @@ void UAlgorithmEditor::open(QString path){
                 UCommentTag* comment = new UCommentTag;
                 comment->setComment(line);
                 stack.last()->addChild(comment);
+                stack.push_back(comment);
             }
         }else if(key=="arg"){
             if(cIndent==functionIndent&&function){
@@ -460,10 +460,19 @@ void UAlgorithmEditor::open(QString path){
         }else if(key=="assign"){
             if(stack.isEmpty())
                 continue;
-            UAssignTag *assign = new UAssignTag;
+            UAssignTag *assign = new UAssignTag(true);
             assign->setVarname(line);
             stack.last()->addChild(assign);
             stack.push_back(assign);
+        }else if(key=="value"){
+            if(stack.isEmpty())
+                continue;
+            UArgHook* value=new UArgHook;
+            value->setTagName("value");
+            value->setIcon(0,QIcon(":/images/algorithm/var.png"));
+            value->setArgValue(line);
+            stack.last()->addChild(value);
+            stack.push_back(value);
         }else if(key=="branch"){
             if(stack.isEmpty())
                 continue;
@@ -510,6 +519,7 @@ void UAlgorithmEditor::open(QString path){
             if(list!=0){
                 UListTagItem* item = new UListTagItem;
                 item->setTagName("item");
+                item->setArgValue(line);
                 list->addChild(item);
                 stack.push_back(list);
             }
@@ -519,12 +529,22 @@ void UAlgorithmEditor::open(QString path){
             ULoopTag* loop = new ULoopTag(true);
             stack.last()->addChild(loop);
             stack.push_back(loop);
-        }else if(key=="traverse"){
+        }else if(key=="traverseloop"){
             if(stack.isEmpty())
                 continue;
             UTraverseTag* traverse = new UTraverseTag(true);
             stack.last()->addChild(traverse);
             stack.push_back(traverse);
+        }else if(key=="traverse"){
+            if(stack.isEmpty())
+                continue;
+            UArgHook* condition=new UArgHook;
+            condition->setIndependent(false);
+            condition->setTagName("traverse");
+            condition->setIcon(0,QIcon(":/images/algorithm/items.png"));
+            condition->setArgValue(line);
+            stack.last()->addChild(condition);
+            stack.push_back(condition);
         }else if(key=="condition"){
             if(stack.isEmpty())
                 continue;

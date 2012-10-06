@@ -9,7 +9,7 @@ UTraverseTag::UTraverseTag(bool empty)
         return;
     condition=new UArgHook;
     condition->setIndependent(false);
-    condition->setTagName("Traversed list");
+    condition->setTagName("traverse");
     condition->setIcon(0,QIcon(":/images/algorithm/items.png"));
     addChild(condition);
     action=new UContainerTag;
@@ -30,6 +30,6 @@ void UTraverseTag::menu(QMenu &)
 
 void UTraverseTag::save(QFile &fp, int depth) const
 {
-    writeLine(fp,"traverse",depth);
+    writeLine(fp,"traverseloop",depth);
     UAlgTag::save(fp,depth);
 }

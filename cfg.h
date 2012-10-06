@@ -22,6 +22,7 @@ private:
     QMap<QString,QSet< ListenItem > > listeners;
     QSet<QString> changed;
     QTimer tick;
+    QString path;
 private slots:
     void alarmListeners();
     void save();

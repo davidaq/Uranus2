@@ -3,7 +3,6 @@
 #include "ualgorithmeditor.h"
 #include <QMessageBox>
 #include <QMenu>
-#include <QDebug>
 
 void MainWindow::on_fileView_doubleClicked(const QModelIndex &index)
 {

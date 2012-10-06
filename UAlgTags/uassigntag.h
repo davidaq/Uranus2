@@ -7,7 +7,7 @@ class UAssignTag : public UAlgTag
 {
     Q_OBJECT
 public:
-    UAssignTag();
+    UAssignTag(bool empty=false);
     virtual void menu(QMenu &);
     virtual QString tagName() const;
     void setVarname(QString);

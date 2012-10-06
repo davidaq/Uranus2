@@ -28,6 +28,7 @@ void UArgHook::menu(QMenu &menu)
         );
     menu.addAction("Set as list",this,SLOT(menuSetArgList()));
     menu.addAction("Use variable",this,SLOT(menuSetArgVar()));
+    menu.addAction("Use traverse value",this,SLOT(menuSetTraverse()));
     menu.addAction("Use function return value",this,SLOT(menuSetArgFunction()));
 }
 
@@ -78,6 +79,11 @@ void UArgHook::menuSetArgValue()
         setArgValue(input);
     }
 
+}
+
+void UArgHook::menuSetTraverse()
+{
+    setArgValue("<variable> traverse");
 }
 
 void UArgHook::menuSetArgVar()

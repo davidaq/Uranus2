@@ -1,12 +1,14 @@
 #include "cfg.h"
 #include <QFile>
 #include <QDataStream>
+#include <QDir>
 
 Cfg Cfg::inst;
 
 Cfg::Cfg()
 {
-    QFile fp("settings.cfg");
+    path = QDir::current().absoluteFilePath("settings.cfg");
+    QFile fp(path);
     if(fp.open(QFile::ReadOnly)){
         QDataStream stream(&fp);
         stream>>table;
@@ -24,7 +26,7 @@ Cfg::~Cfg()
 
 void Cfg::save()
 {
-    QFile fp("settings.cfg");
+    QFile fp(path);
     if(fp.open(QFile::WriteOnly)){
         QDataStream stream(&fp);
         stream<<table;

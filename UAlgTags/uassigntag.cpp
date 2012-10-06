@@ -2,15 +2,17 @@
 #include <QMenu>
 #include <QInputDialog>
 
-UAssignTag::UAssignTag()
+UAssignTag::UAssignTag(bool empty)
 {
-    value=new UArgHook;
-    value->setTagName("value");
-    addChild(value);
+    if(!empty){
+        value=new UArgHook;
+        value->setTagName("value");
+        value->setIcon(0,QIcon(":/images/algorithm/var.png"));
+        addChild(value);
+    }
     setIndependent(true);
     setText(0,"Assign :");
     setIcon(0,QIcon(":/images/algorithm/var.png"));
-    value->setIcon(0,QIcon(":/images/algorithm/var.png"));
 }
 
 void UAssignTag::menu(QMenu &menu)

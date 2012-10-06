@@ -4,7 +4,6 @@
 #include <QTextCodec>
 #include <QTimer>
 #include <QMessageBox>
-#include <QDebug>
 
 
 Console::Console(QWidget *parent) :
@@ -123,7 +122,6 @@ void Console::shellOutput()
             {
                 cwd=msg;
                 Cfg::set("benchCwd",msg);
-                qDebug()<<msg;
                 emit cwdChanged(cwd);
             }
         }

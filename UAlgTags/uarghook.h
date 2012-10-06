@@ -21,6 +21,7 @@ private:
 private slots:
     void menuSetArgValue();
     void menuSetArgVar();
+    void menuSetTraverse();
     void menuSetArgList();
     void menuSetArgFunction();
 };
